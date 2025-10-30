@@ -5,101 +5,6 @@
     <meta name="description" content="Ứng dụng Pomodoro hỗ trợ học tập với tích hợp Gemini AI và giao diện hiện đại." />
     <title>Pomodoro Study App — Tích hợp Gemini AI (Giao diện mới)</title>
     <style>
-    .hidden { display: none !important; }
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    .mode-modal {
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(6, 8, 16, 0.55);
-      backdrop-filter: blur(6px);
-      z-index: 5000;
-      padding: 24px;
-    }
-    .mode-modal .mode-modal__content {
-      background: rgba(12, 14, 24, 0.95);
-      border-radius: 28px;
-      border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: 0 25px 65px rgba(0,0,0,0.45);
-      width: min(560px, 92vw);
-      padding: 32px 32px 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      text-align: center;
-    }
-    .mode-modal h2 {
-      margin: 0;
-      font-size: 26px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-    }
-    .mode-modal p {
-      margin: 0;
-      color: rgba(255,255,255,0.7);
-      font-size: 15px;
-    }
-    .mode-modal__actions {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .mode-modal .mode-choice {
-      width: min(240px, 90vw);
-      padding: 18px 20px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.06);
-      color: inherit;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      text-align: left;
-      transition: transform .2s ease, background .2s ease;
-    }
-    .mode-modal .mode-choice strong {
-      font-size: 18px;
-      letter-spacing: 1px;
-    }
-    .mode-modal .mode-choice span {
-      font-size: 14px;
-      color: rgba(255,255,255,0.6);
-      line-height: 1.5;
-    }
-    .mode-modal .mode-choice:hover {
-      background: rgba(108,140,255,0.18);
-      transform: translateY(-3px);
-      border-color: rgba(108,140,255,0.4);
-    }
-    .mode-modal.show {
-      display: flex;
-    }
-    #pipCtn {
-      position: absolute;
-      width: 0;
-      height: 0;
-      overflow: hidden;
-    }
-    #pipCtn video,
-    #pipCtn canvas {
-      width: 0;
-      height: 0;
-    }
     /*
     =============================================
     POMODORO STUDY APP — PHIÊN BẢN GIAO DIỆN TẬP TRUNG (v1.0)
@@ -162,10 +67,10 @@
       outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 4px;
     }
     *{box-sizing:border-box}
-    html, body{height:100%}
+    html,body{height:100%}
     body {
       margin:0; 
-      font-family: system-ui, -apple-system, 'Segoe UI Variable', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif; 
+      font-family: system-ui, -apple-system, 'Segoe UI Variable', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Inter', sans-serif; 
       
       background-color: var(--bg);
       background-image: var(--bg-image, radial-gradient(1200px 800px at 10% -10%, #20285b 0%, #0f1222 50%, #0b0e1a 100%));
@@ -179,11 +84,11 @@
       -moz-osx-font-smoothing: grayscale;
       text-rendering: optimizeLegibility;
     }
-    #power-mode-wrapper a{color:var(--acc)}
+    a{color:var(--acc)}
 
-    #power-mode-wrapper .app{display:flex; min-height:100vh}
+    .app{display:flex; min-height:100vh}
     
-    #power-mode-wrapper .app-nav {
+    .app-nav {
         width: 60px;
         padding: 16px 0;
         display: flex;
@@ -192,7 +97,7 @@
         gap: 16px;
         z-index: 100;
     }
-    #power-mode-wrapper .nav-btn {
+    .nav-btn {
         background: transparent;
         border: none;
         color: var(--sub);
@@ -206,10 +111,10 @@
         transition: all .2s ease;
         position: relative;
     }
-    #power-mode-wrapper .nav-btn:hover { background: var(--muted); color: var(--text); }
-    #power-mode-wrapper .nav-btn.active { background: var(--acc); color: white; }
-    #power-mode-wrapper .nav-btn svg { width: 24px; height: 24px; }
-    #power-mode-wrapper .nav-btn .tooltip {
+    .nav-btn:hover { background: var(--muted); color: var(--text); }
+    .nav-btn.active { background: var(--acc); color: white; }
+    .nav-btn svg { width: 24px; height: 24px; }
+    .nav-btn .tooltip {
         position: absolute;
         left: 110%;
         top: 50%;
@@ -226,22 +131,22 @@
         pointer-events: none;
         z-index: 200;
     }
-    #power-mode-wrapper .nav-btn:hover .tooltip { opacity: 1; visibility: visible; }
+    .nav-btn:hover .tooltip { opacity: 1; visibility: visible; }
 
-    #power-mode-wrapper .app-content {
+    .app-content {
         flex: 1;
         padding: 24px;
         overflow-y: auto;
         max-height: 100vh;
     }
 
-    #power-mode-wrapper .view { display: none; }
-    #power-mode-wrapper .view.active { display: grid; gap: 24px; animation: fadeIn .3s ease; }
+    .view { display: none; }
+    .view.active { display: grid; gap: 24px; animation: fadeIn .3s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    #power-mode-wrapper .main.reloading { opacity: 0; transition: opacity 0.2s ease-out; }
+    .main.reloading { opacity: 0; transition: opacity 0.2s ease-out; }
 
-    #power-mode-wrapper .panel-bg{
+    .panel-bg{
         background: rgba(23, 26, 46, var(--panel-opacity));
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
@@ -253,10 +158,10 @@
     [data-theme='space'] .panel-bg { border:1px solid rgba(255,255,255,0.12); }
 
 
-#power-mode-wrapper header.app-header{display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom: 24px; position: relative; z-index: 2000;}
-    #power-mode-wrapper header .actions{display:flex; gap:8px; align-items:center}
+header.app-header{display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom: 24px; position: relative; z-index: 2000;}
+    header .actions{display:flex; gap:8px; align-items:center}
     
-    #power-mode-wrapper .btn {
+    .btn {
       background: rgba(255, 255, 255, 0.08);
       color: var(--text);
       border: none; /* Sửa đổi: bỏ border mặc định */
@@ -273,43 +178,43 @@
       position: relative;
       overflow: hidden;
     }
-    #power-mode-wrapper .btn::before {
+    .btn::before {
         content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
         border: 2px solid transparent; border-radius: 12px; background: var(--gradient-border) border-box;
         -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
         -webkit-mask-composite: destination-out; mask-composite: exclude; opacity: 0; transition: opacity 0.3s ease;
     }
-    #power-mode-wrapper .btn:hover::before { opacity: 1; }
-    #power-mode-wrapper .btn:hover { background: rgba(255, 255, 255, 0.12); }
-    #power-mode-wrapper .btn:active { transform: translateY(1px) scale(0.98); filter: brightness(1); }
-    #power-mode-wrapper .btn:disabled { cursor: not-allowed; filter: brightness(0.8) saturate(0.5); }
-    #power-mode-wrapper .btn.ghost { background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); }
-    #power-mode-wrapper .btn.ghost:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); }
-    #power-mode-wrapper .btn.acc { background: var(--acc); color: white; }
-    #power-mode-wrapper .btn.warn { background: var(--warn); color: white; }
-    #power-mode-wrapper .btn.danger { background: var(--danger); color: white; }
-    #power-mode-wrapper .btn.small { padding: 6px 10px; font-size: 14px; border-radius: 9px; }
-    #power-mode-wrapper .btn.small::before { border-radius: 9px; }
-    #power-mode-wrapper .btn > svg { width: 16px; height: 16px; stroke-width: 2.5px; }
+    .btn:hover::before { opacity: 1; }
+    .btn:hover { background: rgba(255, 255, 255, 0.12); }
+    .btn:active { transform: translateY(1px) scale(0.98); filter: brightness(1); }
+    .btn:disabled { cursor: not-allowed; filter: brightness(0.8) saturate(0.5); }
+    .btn.ghost { background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); }
+    .btn.ghost:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); }
+    .btn.acc { background: var(--acc); color: white; }
+    .btn.warn { background: var(--warn); color: white; }
+    .btn.danger { background: var(--danger); color: white; }
+    .btn.small { padding: 6px 10px; font-size: 14px; border-radius: 9px; }
+    .btn.small::before { border-radius: 9px; }
+    .btn > svg { width: 16px; height: 16px; stroke-width: 2.5px; }
 
     /* === START: CẬP NHẬT GIAO DIỆN QUẢN LÝ CHỦ ĐỀ === */
     #view-topics { grid-template-columns: 1fr; }
-    #power-mode-wrapper .topic-item { background:rgba(255,255,255,.04); border:1px solid var(--muted); border-radius:12px; padding:8px; margin-bottom:8px; } /* Sửa đổi */
-    #power-mode-wrapper .topic-header, #power-mode-wrapper .sub-row { display:flex; align-items:center; gap:8px; position: relative; }
-    #power-mode-wrapper .topic-header { cursor: pointer; }
-    #power-mode-wrapper .topic-header .topic-actions { cursor: default; }
-    #power-mode-wrapper .topic-header .topic-actions * { cursor: pointer; }
-    #power-mode-wrapper .topic-item { cursor: pointer; }
-    #power-mode-wrapper .topic-item .topic-actions { cursor: default; }
-    #power-mode-wrapper .topic-item .topic-actions * { cursor: pointer; }
-    #power-mode-wrapper .topic-title { flex:1; font-weight:600; cursor: pointer; }
-    #power-mode-wrapper .chev { width:28px; height:28px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; flex-shrink: 0; cursor: pointer; }
-    #power-mode-wrapper .chev .ico { display:inline-block; transition: transform .18s ease; }
-    #power-mode-wrapper .chev[aria-expanded="false"] .ico { transform: rotate(-90deg); }
-    #power-mode-wrapper .subtopics { margin-top:8px; display:flex; flex-direction:column; gap:6px; }
-    #power-mode-wrapper .subtopics.hidden { display:none; }
+    .topic-item { background:rgba(255,255,255,.04); border:1px solid var(--muted); border-radius:12px; padding:8px; margin-bottom:8px; } /* Sửa đổi */
+    .topic-header, .sub-row { display:flex; align-items:center; gap:8px; position: relative; }
+    .topic-header { cursor: pointer; }
+    .topic-header .topic-actions { cursor: default; }
+    .topic-header .topic-actions * { cursor: pointer; }
+    .topic-item { cursor: pointer; }
+    .topic-item .topic-actions { cursor: default; }
+    .topic-item .topic-actions * { cursor: pointer; }
+    .topic-title { flex:1; font-weight:600; cursor: pointer; }
+    .chev { width:28px; height:28px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; flex-shrink: 0; cursor: pointer; }
+    .chev .ico { display:inline-block; transition: transform .18s ease; }
+    .chev[aria-expanded="false"] .ico { transform: rotate(-90deg); }
+    .subtopics { margin-top:8px; display:flex; flex-direction:column; gap:6px; }
+    .subtopics.hidden { display:none; }
     
-    #power-mode-wrapper .topic-actions, #power-mode-wrapper .sub-row .actions {
+    .topic-actions, .sub-row .actions {
         opacity: 0;
         visibility: hidden;
         transition: opacity .2s ease, visibility .2s ease;
@@ -317,18 +222,19 @@
         gap: 6px;
         align-items: center;
     }
-    #power-mode-wrapper .topic-item:hover .topic-actions, #power-mode-wrapper .topic-item:focus-within .topic-actions, #power-mode-wrapper .sub-row:hover .actions, #power-mode-wrapper .sub-row:focus-within .actions {
+    .topic-item:hover .topic-actions, .topic-item:focus-within .topic-actions,
+    .sub-row:hover .actions, .sub-row:focus-within .actions {
       opacity: 1;
       visibility: visible;
     }
-    #power-mode-wrapper .actions-menu-btn {
+    .actions-menu-btn {
         padding: 0;
         width: 28px;
         height: 28px;
         font-size: 1.2em;
         line-height: 1;
     }
-    #power-mode-wrapper .actions-menu {
+    .actions-menu {
         position: absolute;
         top: 100%;
         right: 0;
@@ -344,15 +250,15 @@
     /* Nâng khối đang mở menu lên trên các khối khác */
     .topic-item.menu-active { position: relative; z-index: 20; }
     
-    #power-mode-wrapper .actions-menu.show { display: flex; }
-    #power-mode-wrapper .menu-item {
+    .actions-menu.show { display: flex; }
+    .menu-item {
         background: transparent; border: none; color: var(--text);
         padding: 8px 10px; border-radius: 6px; text-align: left;
         width: 100%; cursor: pointer; transition: background .2s ease;
         display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500;
     }
-    #power-mode-wrapper .menu-item:hover { background: var(--acc); color: white; }
-    #power-mode-wrapper .menu-item.danger:hover { background: var(--danger); }
+    .menu-item:hover { background: var(--acc); color: white; }
+    .menu-item.danger:hover { background: var(--danger); }
     /* === END: CẬP NHẬT GIAO DIỆN QUẢN LÝ CHỦ ĐỀ === */
 
     .subtopic-btn{
@@ -360,28 +266,28 @@
         text-align:left;
         background-color: rgba(0,0,0,0.02); /* Sửa đổi */
     }
-    #power-mode-wrapper .subtopic-btn:hover {
+    .subtopic-btn:hover {
         background-color: transparent; /* Hover transparent to avoid blue background */
     }
-    #power-mode-wrapper .subtopic-btn.active{
+    .subtopic-btn.active{
         outline:2px solid var(--acc); 
     }
-    #power-mode-wrapper .subtopic-btn.active:hover {
+    .subtopic-btn.active:hover {
         background: transparent; /* Giữ nền trong suốt khi di chuột qua */
     }
     
-    #power-mode-wrapper .panel{border-radius:var(--radius); padding:24px; box-shadow:var(--shadow)}
+    .panel{border-radius:var(--radius); padding:24px; box-shadow:var(--shadow)}
 
-    #power-mode-wrapper .timer-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-    #power-mode-wrapper .timer{display:grid; gap:16px; grid-template-columns: 1fr; align-items:center; text-align:center}
-    #power-mode-wrapper .big-time{font-size: clamp(60px, 12vw, 96px); letter-spacing:1px; font-weight:700; color: var(--text)}
-    #power-mode-wrapper .state{font-weight:700; letter-spacing:.6px}
-    #power-mode-wrapper .state.work{color:var(--acc-2)} /* Sửa đổi màu */
-    #power-mode-wrapper .state.break{color:var(--warn)}
-    #power-mode-wrapper .state.long{color:var(--danger)} /* Sửa đổi màu */
-    #power-mode-wrapper .controls{display:flex; flex-wrap:wrap; gap:12px; justify-content:center}    
-    #power-mode-wrapper #btnStart { padding: 14px 28px; font-size: 1.2em; }
-    #power-mode-wrapper #btnPause, #power-mode-wrapper #btnResume { padding: 12px 24px; font-size: 1.1em; }
+    .timer-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .timer{display:grid; gap:16px; grid-template-columns: 1fr; align-items:center; text-align:center}
+    .big-time{font-size: clamp(60px, 12vw, 96px); letter-spacing:1px; font-weight:700; color: var(--text)}
+    .state{font-weight:700; letter-spacing:.6px}
+    .state.work{color:var(--acc-2)} /* Sửa đổi màu */
+    .state.break{color:var(--warn)}
+    .state.long{color:var(--danger)} /* Sửa đổi màu */
+    .controls{display:flex; flex-wrap:wrap; gap:12px; justify-content:center}    
+    #btnStart { padding: 14px 28px; font-size: 1.2em; }
+    #btnPause, #btnResume { padding: 12px 24px; font-size: 1.1em; }
 
     /* === START: TÙY CHỈNH DẢI PHÂN CÁCH MỀM MẠI HƠN === */
     #view-timer .panel-bg hr {
@@ -394,20 +300,20 @@
     /* === END: TÙY CHỈNH DẢI PHÂN CÁCH MỀM MẠI HƠN === */
 
     .stats-grid{display:grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap:12px}
-    #power-mode-wrapper .stat-card{background:rgba(255,255,255,0.04); border:1px solid var(--muted); border-radius:14px; padding:12px; text-align:center} /* Sửa đổi */
-    #power-mode-wrapper .stat-card h4{margin:4px 0 8px; color:var(--sub); font-weight:600; font-size: 14px;}
-    #power-mode-wrapper .stat-value{font-size: 20px; font-weight: 600;}
-    #power-mode-wrapper .tiny{font-size:12px; color:var(--sub)}
-    #power-mode-wrapper .history{display:grid; gap:8px; max-height:300px; overflow:auto; padding-right:6px}
-    #power-mode-wrapper .hist-item{display:grid; grid-template-columns: 1fr auto; gap:10px; align-items:start; background:rgba(255,255,255,0.04); border:1px solid var(--muted); border-radius:10px; padding:10px} /* Sửa đổi */
+    .stat-card{background:rgba(255,255,255,0.04); border:1px solid var(--muted); border-radius:14px; padding:12px; text-align:center} /* Sửa đổi */
+    .stat-card h4{margin:4px 0 8px; color:var(--sub); font-weight:600; font-size: 14px;}
+    .stat-value{font-size: 20px; font-weight: 600;}
+    .tiny{font-size:12px; color:var(--sub)}
+    .history{display:grid; gap:8px; max-height:300px; overflow:auto; padding-right:6px}
+    .hist-item{display:grid; grid-template-columns: 1fr auto; gap:10px; align-items:start; background:rgba(255,255,255,0.04); border:1px solid var(--muted); border-radius:10px; padding:10px} /* Sửa đổi */
 
-    #power-mode-wrapper .row{display:flex; gap:8px; align-items:center}
-    #power-mode-wrapper .row > * {flex:1}
-    #power-mode-wrapper input[type="text"], #power-mode-wrapper input[type="password"], #power-mode-wrapper input[type="number"], #power-mode-wrapper select, #power-mode-wrapper textarea{width:100%; background:rgba(255,255,255,0.04); color:var(--text); border:1px solid var(--muted); border-radius:10px; padding:10px; outline:none}
-    #power-mode-wrapper textarea{min-height:80px; resize: vertical;}
+    .row{display:flex; gap:8px; align-items:center}
+    .row > * {flex:1}
+    input[type="text"], input[type="password"], input[type="number"], select, textarea{width:100%; background:rgba(255,255,255,0.04); color:var(--text); border:1px solid var(--muted); border-radius:10px; padding:10px; outline:none}
+    textarea{min-height:80px; resize: vertical;}
 
-    #power-mode-wrapper .toasts{position:fixed; right:16px; bottom:16px; display:flex; flex-direction:column; gap:8px; z-index:9999}
-    #power-mode-wrapper .toast{
+    .toasts{position:fixed; right:16px; bottom:16px; display:flex; flex-direction:column; gap:8px; z-index:9999}
+    .toast{
         background: var(--panel); /* Sửa đổi */
         border:1px solid var(--muted);
         color:var(--text);
@@ -416,9 +322,9 @@
     }
     @keyframes toast-in { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
 
-    #power-mode-wrapper .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,var(--panel-opacity)); z-index:10000; backdrop-filter: blur(5px);} /* Nâng z-index để nằm trên header */
-    #power-mode-wrapper .modal.show{display:flex}
-    #power-mode-wrapper .modal-card{
+    .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,var(--panel-opacity)); z-index:10000; backdrop-filter: blur(5px);} /* Nâng z-index để nằm trên header */
+    .modal.show{display:flex}
+    .modal-card{
         position: relative;
         z-index: 10001;
         width:min(720px, 94vw);
@@ -433,74 +339,78 @@
     }
     body.modal-open { overflow: hidden; }
     @keyframes modal-in { from { opacity: 0; transform: scale(0.92) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-    #power-mode-wrapper .modal-card h3{margin-top:0}
-    #power-mode-wrapper .dashboard-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-    #power-mode-wrapper .dashboard-table th, #power-mode-wrapper .dashboard-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--muted); }
-    #power-mode-wrapper .dashboard-table th { color: var(--sub); }
+    .modal-card h3{margin-top:0}
+    .dashboard-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .dashboard-table th, .dashboard-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--muted); }
+    .dashboard-table th { color: var(--sub); }
 
-    #power-mode-wrapper .footer-note{font-size:12px; color:var(--sub)}
-    #power-mode-wrapper .hidden{display:none !important}
+    .footer-note{font-size:12px; color:var(--sub)}
+    .hidden{display:none !important}
 
-    #power-mode-wrapper .notes-list { display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; padding-right: 6px; }
-    #power-mode-wrapper .note-item { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; cursor: pointer; } /* Sửa đổi */
-    #power-mode-wrapper .note-content-wrapper { flex: 1; min-width: 0; }
-    #power-mode-wrapper .note-content { white-space: pre-wrap; word-break: break-word; max-height: 60px; overflow: hidden; position: relative; transition: max-height 0.35s ease-in-out; }
-    #power-mode-wrapper .note-content:not(.expanded)::after {
+    .notes-list { display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; padding-right: 6px; }
+    .note-item { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; cursor: pointer; } /* Sửa đổi */
+    .note-content-wrapper { flex: 1; min-width: 0; }
+    .note-content { white-space: pre-wrap; word-break: break-word; max-height: 60px; overflow: hidden; position: relative; transition: max-height 0.35s ease-in-out; }
+    .note-content:not(.expanded)::after {
         content: ''; position: absolute; bottom: 0; right: 0; width: 100%; height: 20px; background: linear-gradient(to top, var(--panel) 20%, transparent);
     }
-    #power-mode-wrapper .note-content.expanded { max-height: 500px; }
-    #power-mode-wrapper .note-meta { font-size: 11px; color: var(--sub); margin-top: 4px; }
+    .note-content.expanded { max-height: 500px; }
+    .note-meta { font-size: 11px; color: var(--sub); margin-top: 4px; }
     
-    #power-mode-wrapper .spinner { border: 2px solid var(--muted); border-top-color: var(--text); border-radius: 50%; width: 16px; height: 16px; animation: spin 1s linear infinite; } /* Sửa đổi */
+    .spinner { border: 2px solid var(--muted); border-top-color: var(--text); border-radius: 50%; width: 16px; height: 16px; animation: spin 1s linear infinite; } /* Sửa đổi */
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    #power-mode-wrapper .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    #power-mode-wrapper .panel-header h3 { margin: 0; }
-    #power-mode-wrapper .panel-header .actions { display: flex; gap: 8px; }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .panel-header h3 { margin: 0; }
+    .panel-header .actions { display: flex; gap: 8px; }
     
-    #power-mode-wrapper .aux-panel { margin-top: 24px; }
-    #power-mode-wrapper .tab-nav { display: flex; gap: 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 16px; }
-    #power-mode-wrapper .tab-btn { background: transparent; border: none; color: var(--sub); padding: 8px 16px; cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s ease; font-weight: 600; }
-    #power-mode-wrapper .tab-btn:hover { color: var(--text); }
-    #power-mode-wrapper .tab-btn.active { color: var(--acc); border-bottom-color: var(--acc); }
-    #power-mode-wrapper .tab-content {
+    .aux-panel { margin-top: 24px; }
+    .tab-nav { display: flex; gap: 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 16px; }
+    .tab-btn { background: transparent; border: none; color: var(--sub); padding: 8px 16px; cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s ease; font-weight: 600; }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--acc); border-bottom-color: var(--acc); }
+    .tab-content {
       display: none;
       padding-top: 8px;
     }
-    #power-mode-wrapper .tab-content.active {
+    .tab-content.active {
       animation: fadeIn 0.25s ease-out;
     }
-    #power-mode-wrapper #tasks.tab-content.active, #power-mode-wrapper #notes.tab-content.active, #power-mode-wrapper #ai.tab-content.active {
+    #tasks.tab-content.active,
+    #notes.tab-content.active,
+    #ai.tab-content.active {
         display: block;
     }
 
-    #power-mode-wrapper #settings-timer.tab-content.active, #power-mode-wrapper #settings-ui.tab-content.active, #power-mode-wrapper #settings-integrations.tab-content.active {
+    #settings-timer.tab-content.active,
+    #settings-ui.tab-content.active,
+    #settings-integrations.tab-content.active {
         display: flex;
     }
 
-    #power-mode-wrapper .settings-row-toggle {
+    .settings-row-toggle {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-top: 16px;
     }
-    #power-mode-wrapper .settings-row-toggle span {
+    .settings-row-toggle span {
       flex: 1;
       cursor: pointer;
     }
-    #power-mode-wrapper .toggle-switch {
+    .toggle-switch {
       position: relative;
       display: inline-block;
       width: 44px;
       height: 24px;
       flex-shrink: 0;
     }
-    #power-mode-wrapper .toggle-switch input {
+    .toggle-switch input {
       opacity: 0;
       width: 0;
       height: 0;
     }
-    #power-mode-wrapper .toggle-switch .slider {
+    .toggle-switch .slider {
       position: absolute;
       cursor: pointer;
       top: 0;
@@ -511,7 +421,7 @@
       transition: .3s;
       border-radius: 24px;
     }
-    #power-mode-wrapper .toggle-switch .slider:before {
+    .toggle-switch .slider:before {
       position: absolute;
       content: "";
       height: 18px;
@@ -522,622 +432,27 @@
       transition: .3s;
       border-radius: 50%;
     }
-    #power-mode-wrapper .toggle-switch input:checked + .slider {
+    .toggle-switch input:checked + .slider {
       background-color: var(--acc-2);
     }
-    #power-mode-wrapper .toggle-switch input:checked + .slider:before {
-        transform: translateX(20px);
-    }
-
-    #ambiance-mode-wrapper .toggle-switch {
-      position: relative;
-      display: inline-flex;
-      width: 44px;
-      height: 24px;
-      flex-shrink: 0;
-      margin-left: 12px;
-    }
-    #ambiance-mode-wrapper .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    #ambiance-mode-wrapper .toggle-switch .slider {
-      position: absolute;
-      cursor: pointer;
-      inset: 0;
-      background: rgba(255,255,255,0.15);
-      border-radius: 24px;
-      transition: .3s ease;
-    }
-    #ambiance-mode-wrapper .toggle-switch .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      border-radius: 50%;
-      transition: .3s ease;
-    }
-    #ambiance-mode-wrapper .toggle-switch input:checked + .slider {
-      background: var(--acc-2);
-    }
-    #ambiance-mode-wrapper .toggle-switch input:checked + .slider:before {
+    .toggle-switch input:checked + .slider:before {
       transform: translateX(20px);
     }
+    
+    .chat-messages { max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; padding: 4px; }
+    .chat-msg { padding: 8px 12px; border-radius: 12px; max-width: 85%; word-break: break-word; }
+    .chat-msg.user { background: var(--acc); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .chat-msg.model { background: var(--muted); align-self: flex-start; border-bottom-left-radius: 4px; }
+    .chat-input-area { display: flex; gap: 8px; }
 
-    #ambiance-mode-wrapper {
-      display: flex;
-      min-height: 100vh;
-      width: 100%;
-      position: relative;
-      color: var(--text);
-      font-family: 'Segoe UI Variable', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-    }
-    #ambiance-mode-wrapper.hidden {
-      display: none !important;
-    }
-    #ambiance-mode-wrapper .hidden {
-      display: none !important;
-    }
-    #ambiance-mode-wrapper .ambiance-root {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      padding: 48px 24px 32px;
-      gap: 32px;
-      position: relative;
-      transition: opacity .3s ease;
-    }
-    #ambiance-mode-wrapper .ambiance-main {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      text-align: center;
-      max-width: 640px;
-      width: 100%;
-      background: rgba(12, 16, 28, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 32px;
-      padding: 40px 32px 36px;
-      backdrop-filter: blur(16px);
-      box-shadow: 0 25px 60px rgba(0,0,0,0.25);
-    }
-    #ambiance-mode-wrapper .ambiance-clock {
-      font-size: clamp(72px, 9vw, 128px);
-      font-weight: 600;
-      letter-spacing: 6px;
-    }
-    #ambiance-mode-wrapper .ambiance-status {
-      font-size: 18px;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.65);
-    }
-    #ambiance-mode-wrapper .ambiance-secondary {
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: rgba(255,255,255,0.55);
-    }
-    #ambiance-mode-wrapper .ambiance-controls {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 14px;
-      margin-top: 12px;
-    }
-    #ambiance-mode-wrapper .ambiance-btn {
-      min-width: 120px;
-      padding: 12px 20px;
-      border-radius: 999px;
-      border: none;
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
-      color: var(--text);
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-    }
-    #ambiance-mode-wrapper .ambiance-btn.primary {
-      background: var(--acc);
-      border-color: transparent;
-      color: #0b0e1a;
-      box-shadow: 0 16px 40px rgba(108,140,255,0.35);
-    }
-    #ambiance-mode-wrapper .ambiance-btn.danger {
-      background: var(--danger);
-      border-color: transparent;
-      color: white;
-    }
-    #ambiance-mode-wrapper .ambiance-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.22);
-    }
-    #ambiance-mode-wrapper .ambiance-toolbar {
-      position: fixed;
-      top: 24px;
-      right: 24px;
-      display: flex;
-      gap: 12px;
-      padding: 12px 14px;
-      background: rgba(8, 10, 20, 0.5);
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.1);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 14px 30px rgba(0,0,0,0.25);
-      z-index: 2100;
-    }
-    #ambiance-mode-wrapper .ambiance-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      border: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: transparent;
-      color: rgba(255,255,255,0.8);
-      font-size: 18px;
-      cursor: pointer;
-      transition: background .2s ease, transform .2s ease;
-      position: relative;
-    }
-    #ambiance-mode-wrapper .ambiance-icon:hover {
-      background: rgba(255,255,255,0.1);
-      transform: translateY(-2px);
-    }
-    #ambiance-mode-wrapper .ambiance-icon:focus-visible {
-      outline: 2px solid var(--acc);
-      outline-offset: 2px;
-    }
-    #ambiance-mode-wrapper .ambiance-modal {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(6, 8, 16, 0.55);
-      backdrop-filter: blur(6px);
-      z-index: 2200;
-      padding: 24px;
-    }
-    #ambiance-mode-wrapper .ambiance-modal.hidden {
-      display: none;
-    }
-    #ambiance-mode-wrapper .ambiance-modal-content {
-      width: min(520px, 92vw);
-      max-height: 80vh;
-      overflow: hidden;
-      border-radius: 24px;
-      background: rgba(10, 12, 24, 0.92);
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
-      display: flex;
-      flex-direction: column;
-    }
-    #ambiance-mode-wrapper .ambiance-modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 22px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    #ambiance-mode-wrapper .ambiance-modal-header h3 {
-      margin: 0;
-      font-size: 18px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-    #ambiance-mode-wrapper .ambiance-modal-body {
-      overflow-y: auto;
-      padding: 18px 22px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    #ambiance-mode-wrapper .ambiance-close {
-      background: transparent;
-      border: none;
-      color: rgba(255,255,255,0.6);
-      font-size: 24px;
-      line-height: 1;
-      cursor: pointer;
-    }
-    #ambiance-mode-wrapper .ambiance-section {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    #ambiance-mode-wrapper .ambiance-section h4 {
-      margin: 0;
-      font-size: 14px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.55);
-    }
-    #ambiance-mode-wrapper .ambiance-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    #ambiance-mode-wrapper .ambiance-list .item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 16px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid transparent;
-      transition: border .2s ease, background .2s ease;
-    }
-    #ambiance-mode-wrapper .ambiance-list .item:hover {
-      border-color: rgba(108,140,255,0.35);
-      background: rgba(255,255,255,0.1);
-    }
-    #ambiance-mode-wrapper .ambiance-list .item button {
-      border: none;
-      background: rgba(255,255,255,0.12);
-      color: var(--text);
-      padding: 6px 12px;
-      border-radius: 999px;
-      cursor: pointer;
-      font-size: 13px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-    #ambiance-mode-wrapper .ambiance-list .item .sound-controls {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    #ambiance-mode-wrapper .ambiance-list .item .sound-controls label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: rgba(255,255,255,0.75);
-    }
-    #ambiance-mode-wrapper .ambiance-task-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 14px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.04);
-      transition: background .2s ease;
-    }
-    #ambiance-mode-wrapper .ambiance-task-item:hover {
-      background: rgba(255,255,255,0.07);
-    }
-    #ambiance-mode-wrapper .ambiance-task-item.completed .task-text {
-      text-decoration: line-through;
-      opacity: 0.65;
-    }
-    #ambiance-mode-wrapper .ambiance-task-label {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex: 1;
-    }
-    #ambiance-mode-wrapper .ambiance-task-label input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--acc);
-    }
-    #ambiance-mode-wrapper .ambiance-task-input {
-      display: flex;
-      gap: 10px;
-      margin-top: 16px;
-    }
-    #ambiance-mode-wrapper .ambiance-task-input input {
-      flex: 1;
-      padding: 12px 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.08);
-      color: var(--text);
-    }
-    #ambiance-mode-wrapper .ambiance-task-input input::placeholder {
-      color: rgba(255,255,255,0.6);
-    }
-    #ambiance-mode-wrapper .ambiance-task-input button {
-      flex: 0 0 auto;
-    }
-    #ambiance-mode-wrapper .ambiance-item-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: opacity .2s ease;
-    }
-    #ambiance-mode-wrapper .ambiance-item-actions.hidden-by-default {
-      opacity: 0;
-      pointer-events: none;
-    }
-    #ambiance-mode-wrapper .ambiance-task-item:hover .ambiance-item-actions.hidden-by-default,
-    #ambiance-mode-wrapper .ambiance-task-item:focus-within .ambiance-item-actions.hidden-by-default {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    #ambiance-mode-wrapper .ambiance-item-actions .icon-only {
-      min-width: auto;
-      padding: 8px 12px;
-    }
-    #ambiance-mode-wrapper .ambiance-task-stats {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-      font-size: 13px;
-      color: rgba(255,255,255,0.7);
-    }
-    #ambiance-mode-wrapper .ambiance-task-stats strong {
-      color: var(--text);
-    }
-    #ambiance-mode-wrapper .ambiance-topic-flow {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    #ambiance-mode-wrapper .ambiance-topic-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    #ambiance-mode-wrapper .ambiance-topic-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      padding: 14px 18px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.06);
-      cursor: pointer;
-      transition: background .2s ease, transform .2s ease, border .2s ease;
-    }
-    #ambiance-mode-wrapper .ambiance-topic-row > span {
-      font-size: 18px;
-      color: rgba(255,255,255,0.7);
-    }
-    #ambiance-mode-wrapper .ambiance-topic-row:hover {
-      background: rgba(108,140,255,0.18);
-      border-color: rgba(108,140,255,0.45);
-      transform: translateY(-2px);
-    }
-    #ambiance-mode-wrapper .ambiance-topic-detail {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    #ambiance-mode-wrapper .ambiance-topic-detail strong {
-      font-size: 15px;
-    }
-    #ambiance-mode-wrapper .ambiance-topic-meta {
-      font-size: 12px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.6);
-    }
-    #ambiance-mode-wrapper .ambiance-topics-back {
-      align-self: flex-start;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.05);
-      cursor: pointer;
-      transition: background .2s ease, transform .2s ease, border .2s ease;
-    }
-    #ambiance-mode-wrapper .ambiance-topics-back:hover {
-      background: rgba(108,140,255,0.15);
-      border-color: rgba(108,140,255,0.35);
-      transform: translateY(-1px);
-    }
-    #ambiance-mode-wrapper .ambiance-subtopic-list {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    #ambiance-mode-wrapper .ambiance-subtopic-chip-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    #ambiance-mode-wrapper .ambiance-subtopic-chip-group .ambiance-chip.active {
-      box-shadow: 0 0 0 2px rgba(108,140,255,0.7);
-    }
-    #ambiance-mode-wrapper .ambiance-sound-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 18px;
-    }
-    #ambiance-mode-wrapper .ambiance-sound-meta {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    #ambiance-mode-wrapper .ambiance-chip-group {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    #ambiance-mode-wrapper .ambiance-chip {
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      font-size: 13px;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: background .2s ease, transform .2s ease;
-    }
-    #ambiance-mode-wrapper .ambiance-chip.active,
-    #ambiance-mode-wrapper .ambiance-chip:hover {
-      background: var(--acc);
-      color: #0b0e1a;
-      transform: translateY(-2px);
-    }
-    #ambiance-mode-wrapper .ambiance-slider {
-      width: 160px;
-      accent-color: var(--acc);
-    }
-    #ambiance-mode-wrapper .ambiance-bg-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 16px;
-    }
-    #ambiance-mode-wrapper .ambiance-bg-card {
-      position: relative;
-      border-radius: 18px;
-      overflow: hidden;
-      min-height: 110px;
-      cursor: pointer;
-      border: 1px solid transparent;
-      background-size: cover;
-      background-position: center;
-      transition: transform .2s ease, border .2s ease, box-shadow .2s ease;
-    }
-    #ambiance-mode-wrapper .ambiance-bg-card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(8,10,20,0.55) 100%);
-    }
-    #ambiance-mode-wrapper .ambiance-bg-card span {
-      position: absolute;
-      bottom: 12px;
-      left: 12px;
-      right: 12px;
-      padding: 6px 8px;
-      border-radius: 999px;
-      background: rgba(8,10,20,0.75);
-      font-size: 12px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      text-align: center;
-      z-index: 2;
-    }
-    #ambiance-mode-wrapper .ambiance-bg-card:hover {
-    #ambiance-mode-wrapper .ambiance-bg-card.active {
-      outline: 2px solid var(--acc);
-      box-shadow: 0 18px 40px rgba(108,140,255,0.25);
-    }
-      transform: translateY(-4px);
-      border-color: rgba(108,140,255,0.45);
-      box-shadow: 0 16px 30px rgba(0,0,0,0.3);
-    }
-    #ambiance-mode-wrapper .ambiance-empty {
-      text-align: center;
-      padding: 24px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.05);
-      color: rgba(255,255,255,0.6);
-      letter-spacing: 1px;
-    }
-    #ambiance-mode-wrapper .ambiance-zen-toggle {
-      position: fixed;
-      left: 24px;
-      top: 24px;
-      padding: 12px 16px;
-      background: rgba(12,14,24,0.55);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 999px;
-      backdrop-filter: blur(10px);
-      cursor: pointer;
-      color: rgba(255,255,255,0.75);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      z-index: 2100;
-      transition: transform .2s ease, background .2s ease;
-    }
-    #ambiance-mode-wrapper .ambiance-zen-toggle:hover {
-      transform: translateY(-2px);
-      background: rgba(255,255,255,0.12);
-    }
-    #ambiance-mode-wrapper .ambiance-zen-overlay {
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-      z-index: 2050;
-    }
-    #ambiance-mode-wrapper .ambiance-zen-overlay .hint {
-      background: rgba(12,14,24,0.6);
-      border-radius: 999px;
-      padding: 10px 20px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      font-size: 12px;
-      color: rgba(255,255,255,0.65);
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-    #ambiance-mode-wrapper.zen-active .ambiance-main,
-    #ambiance-mode-wrapper.zen-active .ambiance-toolbar,
-    #ambiance-mode-wrapper.zen-active .ambiance-zen-toggle {
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .3s ease;
-    }
-    #ambiance-mode-wrapper.zen-active.zen-show .ambiance-main,
-    #ambiance-mode-wrapper.zen-active.zen-show .ambiance-toolbar,
-    #ambiance-mode-wrapper.zen-active.zen-show .ambiance-zen-toggle {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    #ambiance-mode-wrapper.zen-active .ambiance-zen-overlay {
-      display: flex;
-    }
-    @media (max-width: 768px) {
-      #ambiance-mode-wrapper .ambiance-toolbar {
-        top: auto;
-        bottom: 24px;
-        right: 50%;
-        transform: translateX(50%);
-        flex-wrap: wrap;
-      }
-      #ambiance-mode-wrapper .ambiance-main {
-        padding: 32px 20px 28px;
-      }
-      #ambiance-mode-wrapper .ambiance-btn {
-        min-width: 110px;
-      }
-      #ambiance-mode-wrapper .ambiance-zen-toggle {
-        left: 50%;
-        transform: translateX(-50%);
-        top: 16px;
-      }
-    }
-
-    #power-mode-wrapper .chat-messages { max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; padding: 4px; }
-    #power-mode-wrapper .chat-msg { padding: 8px 12px; border-radius: 12px; max-width: 85%; word-break: break-word; }
-    #power-mode-wrapper .chat-msg.user { background: var(--acc); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
-    #power-mode-wrapper .chat-msg.model { background: var(--muted); align-self: flex-start; border-bottom-left-radius: 4px; }
-    #power-mode-wrapper .chat-input-area { display: flex; gap: 8px; }
-
-    #power-mode-wrapper .methods-list { list-style: none; padding: 0; }
-    #power-mode-wrapper .method-item { align-items: flex-start; padding: 12px; display: flex; flex-direction: column; gap: 10px; border-radius: 8px; }
-    #power-mode-wrapper .method-item:hover { background: rgba(0,0,0,0.03); } /* Sửa đổi */
-    #power-mode-wrapper .method-item input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0;}
-    #power-mode-wrapper .method-item label { flex: 1; }
-    #power-mode-wrapper .method-item label.completed { text-decoration: line-through; color: var(--sub); }
-    #power-mode-wrapper .method-item .content-wrapper { flex: 1; cursor: pointer; }
-    #power-mode-wrapper .method-item .concept { font-size: 14px; color: var(--sub); margin-top: 8px; border-left: 2px solid var(--muted); padding-left: 12px; white-space: pre-wrap; word-break: break-word; }
+    .methods-list { list-style: none; padding: 0; }
+    .method-item { align-items: flex-start; padding: 12px; display: flex; flex-direction: column; gap: 10px; border-radius: 8px; }
+    .method-item:hover { background: rgba(0,0,0,0.03); } /* Sửa đổi */
+    .method-item input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0;}
+    .method-item label { flex: 1; }
+    .method-item label.completed { text-decoration: line-through; color: var(--sub); }
+    .method-item .content-wrapper { flex: 1; cursor: pointer; }
+    .method-item .concept { font-size: 14px; color: var(--sub); margin-top: 8px; border-left: 2px solid var(--muted); padding-left: 12px; white-space: pre-wrap; word-break: break-word; }
     /* Highlight section titles and bold text inside method content */
     .method-content h4 {
         color: var(--acc-2);
@@ -1147,80 +462,80 @@
         /* Giới hạn chiều rộng để tiêu đề gọn hơn */
         max-width: 50%;
     }
-    #power-mode-wrapper .method-content strong {
+    .method-content strong {
         color: var(--acc);
         font-weight: 600;
     }
     /* Apply the same highlight to the Guide view */
     #view-guide h4 { color: var(--acc-2); }
-    #power-mode-wrapper #view-guide strong { color: var(--acc-2); }
+    #view-guide strong { color: var(--acc-2); }
     /* Show hand cursor to indicate clickability */
     .method-item, .method-item summary { cursor: pointer; }
-    #power-mode-wrapper .subtopic-todo-list { list-style: none; padding: 0; margin: 0; max-height: 100px; overflow-y: auto; text-align: left; }
-    #power-mode-wrapper .subtopic-todo-list li { display: flex; align-items: center; gap: 8px; padding: 4px; transition: all 0.2s ease-out; }
-    #power-mode-wrapper .subtopic-todo-list li.removing { transform: translateX(100%); opacity: 0; }
-    #power-mode-wrapper .subtopic-todo-list label { flex: 1; }
+    .subtopic-todo-list { list-style: none; padding: 0; margin: 0; max-height: 100px; overflow-y: auto; text-align: left; }
+    .subtopic-todo-list li { display: flex; align-items: center; gap: 8px; padding: 4px; transition: all 0.2s ease-out; }
+    .subtopic-todo-list li.removing { transform: translateX(100%); opacity: 0; }
+    .subtopic-todo-list label { flex: 1; }
 
-    #power-mode-wrapper #youtube-player-container { position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    #youtube-player-container { position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
-    #power-mode-wrapper ::-webkit-scrollbar { width: 8px; height: 8px; }
-    #power-mode-wrapper ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); border-radius: 10px; } /* Sửa đổi */
-    #power-mode-wrapper ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 10px; border: 2px solid transparent; background-clip: content-box; }
-    #power-mode-wrapper ::-webkit-scrollbar-thumb:hover { background: var(--sub); background-clip: content-box; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); border-radius: 10px; } /* Sửa đổi */
+    ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 10px; border: 2px solid transparent; background-clip: content-box; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--sub); background-clip: content-box; }
     
-    #power-mode-wrapper .timer-circle-container {
+    .timer-circle-container {
         position: relative; width: clamp(250px, 40vw, 320px); height: clamp(250px, 40vw, 320px); margin: 24px auto; display: flex; align-items: center; justify-content: center;
     }
-    #power-mode-wrapper .timer-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
-    #power-mode-wrapper .timer-circle-bg, #power-mode-wrapper .timer-circle-progress { fill: none; stroke-width: 8; }
-    #power-mode-wrapper .timer-circle-bg { stroke: var(--muted); } /* Sửa đổi */
-    #power-mode-wrapper .timer-circle-progress { stroke: var(--acc); stroke-linecap: round; transition: stroke-dashoffset 0.3s linear, stroke 0.5s ease; }
+    .timer-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+    .timer-circle-bg, .timer-circle-progress { fill: none; stroke-width: 8; }
+    .timer-circle-bg { stroke: var(--muted); } /* Sửa đổi */
+    .timer-circle-progress { stroke: var(--acc); stroke-linecap: round; transition: stroke-dashoffset 0.3s linear, stroke 0.5s ease; }
     @keyframes flash { 0%, 100% { box-shadow: 0 0 10px 2px transparent; } 50% { box-shadow: 0 0 20px 8px currentColor; } }
-    #power-mode-wrapper .timer-circle-container.finished { color: var(--acc-2); animation: flash 1s ease-out; }
+    .timer-circle-container.finished { color: var(--acc-2); animation: flash 1s ease-out; }
     @keyframes breathing-effect { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
-    #power-mode-wrapper .timer-circle-container.breathing { animation: breathing-effect 3s ease-in-out infinite; }
+    .timer-circle-container.breathing { animation: breathing-effect 3s ease-in-out infinite; }
     
     
     
     @media (max-width: 1024px) {
-      #power-mode-wrapper .app-content { padding: 20px; }
-      #power-mode-wrapper .panel { padding: 20px; }
-      #power-mode-wrapper .timer-circle-container { width: clamp(220px, 50vw, 300px); height: clamp(220px, 50vw, 300px); }
+      .app-content { padding: 20px; }
+      .panel { padding: 20px; }
+      .timer-circle-container { width: clamp(220px, 50vw, 300px); height: clamp(220px, 50vw, 300px); }
     }
 
     @media (max-width: 768px) {
-      #power-mode-wrapper .app { flex-direction: column; }
-      #power-mode-wrapper .app-nav { width: 100%; height: 60px; flex-direction: row; justify-content: center; border-right: none; border-top: 1px solid rgba(255,255,255,.08); order: 2; padding: 0 16px; }
-      #power-mode-wrapper .app-content { padding: 16px; order: 1; }
-      #power-mode-wrapper .panel { padding: 16px; }
-      #power-mode-wrapper .modal-card .tab-nav { overflow-x: auto; }
+      .app { flex-direction: column; }
+      .app-nav { width: 100%; height: 60px; flex-direction: row; justify-content: center; border-right: none; border-top: 1px solid rgba(255,255,255,.08); order: 2; padding: 0 16px; }
+      .app-content { padding: 16px; order: 1; }
+      .panel { padding: 16px; }
+      .modal-card .tab-nav { overflow-x: auto; }
     }
 
     @media (max-width: 480px) {
-      #power-mode-wrapper .app-nav { height: 50px; }
-      #power-mode-wrapper .nav-btn { flex: 1; }
-      #power-mode-wrapper header.app-header { flex-direction: column; align-items: stretch; gap: 8px; }
-      #power-mode-wrapper .btn { padding: 8px 12px; }
-      #power-mode-wrapper .timer-circle-container { width: clamp(180px, 80vw, 220px); height: clamp(180px, 80vw, 220px); margin: 16px auto; }
-      #power-mode-wrapper .panel { padding: 12px; }
-      #power-mode-wrapper .app-content { padding: 12px; }
+      .app-nav { height: 50px; }
+      .nav-btn { flex: 1; }
+      header.app-header { flex-direction: column; align-items: stretch; gap: 8px; }
+      .btn { padding: 8px 12px; }
+      .timer-circle-container { width: clamp(180px, 80vw, 220px); height: clamp(180px, 80vw, 220px); margin: 16px auto; }
+      .panel { padding: 12px; }
+      .app-content { padding: 12px; }
     }
 
-    #power-mode-wrapper #view-timer.no-subtopic-selected > .panel-bg:not(:first-child) { display: none; }
-    #power-mode-wrapper #view-timer.no-subtopic-selected .timer-header > .presets { display: none; }
-    #power-mode-wrapper #view-timer.no-subtopic-selected .timer { display: none; }
+    #view-timer.no-subtopic-selected > .panel-bg:not(:first-child) { display: none; }
+    #view-timer.no-subtopic-selected .timer-header > .presets { display: none; }
+    #view-timer.no-subtopic-selected .timer { display: none; }
 
-    #power-mode-wrapper header.app-header .actions #btnFullscreen { background: transparent; border: none; box-shadow: none; }
-    #power-mode-wrapper header.app-header .actions #btnFullscreen:hover { background: var(--muted); filter: none; }
-    #power-mode-wrapper header.app-header .actions #btnFullscreen:hover::before { opacity: 0; }
+    header.app-header .actions #btnFullscreen { background: transparent; border: none; box-shadow: none; }
+    header.app-header .actions #btnFullscreen:hover { background: var(--muted); filter: none; }
+    header.app-header .actions #btnFullscreen:hover::before { opacity: 0; }
 
-    #power-mode-wrapper input[type="text"], #power-mode-wrapper input[type="password"], #power-mode-wrapper input[type="number"], #power-mode-wrapper select, #power-mode-wrapper textarea {
+    input[type="text"], input[type="password"], input[type="number"], select, textarea {
         background: rgba(255,255,255,0.04) !important; /* Sửa đổi: chuyển sang nền trắng trong suốt */
         color: var(--text);
         border: 1px solid rgba(255, 255, 255, 0.1); /* Viền trắng mờ */
         transition: background .2s ease, border-color .2s ease;
     }
-    #power-mode-wrapper input[type="text"]:focus, #power-mode-wrapper input[type="password"]:focus, #power-mode-wrapper input[type="number"]:focus, #power-mode-wrapper select:focus, #power-mode-wrapper textarea:focus {
+    input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
         background: rgba(255,255,255,0.06) !important; /* Tinh chỉnh: sát mẫu hơn */
         border-color: var(--acc);
     }
@@ -1231,7 +546,8 @@
         border-color: rgba(0, 0, 0, 0.1); /* Viền đen mờ trên theme sáng */
     }
 
-    [data-theme='light'] input:focus, [data-theme='light'] select:focus, [data-theme='light'] textarea:focus, [data-theme='pastel'] input:focus, [data-theme='pastel'] select:focus, [data-theme='pastel'] textarea:focus {
+    [data-theme='light'] input:focus, [data-theme='light'] select:focus, [data-theme='light'] textarea:focus,
+    [data-theme='pastel'] input:focus, [data-theme='pastel'] select:focus, [data-theme='pastel'] textarea:focus {
         background: rgba(0, 0, 0, 0.07) !important; /* Tăng độ đậm khi focus */
     }
     /* === END: SỬA LỖI NỀN INPUT/SELECT TRÊN THEME SÁNG === */
@@ -1242,13 +558,13 @@
         color: var(--text);
     }
     
-    #power-mode-wrapper ::placeholder { color: var(--sub); opacity: 0.7; } /* Sửa đổi */
-    #power-mode-wrapper ::-ms-input-placeholder { color: var(--sub); }
-    #power-mode-wrapper :-ms-input-placeholder { color: var(--sub); }
+    ::placeholder { color: var(--sub); opacity: 0.7; } /* Sửa đổi */
+    ::-ms-input-placeholder { color: var(--sub); }
+    :-ms-input-placeholder { color: var(--sub); }
 
     
     
-    #power-mode-wrapper .draggable-timer {
+    .draggable-timer {
         position: fixed;
         bottom: 20px;
         right: 20px;
@@ -1271,10 +587,11 @@
         transform: scale(1);
         pointer-events: auto;
     }
-    #power-mode-wrapper .app-nav, #power-mode-wrapper .panel-bg, #power-mode-wrapper .app-header .actions > *, #power-mode-wrapper .app-header > .row {
+    .app-nav, .panel-bg, .app-header .actions > *, .app-header > .row {
         transition: opacity 0.35s ease, transform 0.35s ease, background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
     }
-    body.bg-view-mode .app-nav, body.bg-view-mode .view.active > .panel-bg {
+    body.bg-view-mode .app-nav,
+    body.bg-view-mode .view.active > .panel-bg {
         opacity: 0;
         pointer-events: none;
         transform: scale(0.98);
@@ -1284,23 +601,23 @@
         border-color: transparent !important;
         box-shadow: none !important;
     }
-    body.bg-view-mode .app-header .actions > *:not(#btnToggleBg), body.bg-view-mode .app-header > .row {
+    body.bg-view-mode .app-header .actions > *:not(#btnToggleBg),
+    body.bg-view-mode .app-header > .row {
         opacity: 0;
-          <button class="btn ghost small" id="btnPiP" title="Picture-in-Picture">PiP</button>
         pointer-events: none;
     }
     body.bg-view-mode #btnToggleBg {
         opacity: 1;
         pointer-events: auto;
     }
-    #power-mode-wrapper .sound-permission-bar {
+    .sound-permission-bar {
       position: fixed; left: 50%; transform: translateX(-50%);
       bottom: 48px; z-index: 9999;
       border-radius: 12px; padding: 10px 14px;
       display: none; align-items: center; gap: 10px;
       box-shadow: var(--shadow);
     }
-    #power-mode-wrapper .sound-permission-bar.show { display: flex; }
+    .sound-permission-bar.show { display: flex; }
 
     /* ========================================================= */
     /* START: CẢI THIỆN GIAO DIỆN ÂM THANH (HTML Refactor)     */
@@ -1318,7 +635,7 @@
       width: 100%;
     }
 
-    #power-mode-wrapper .custom-sound-row {
+    .custom-sound-row {
       align-items: center;
       padding: 12px 16px;
       border-radius: 10px;
@@ -1328,7 +645,7 @@
       gap: 12px;
     }
 
-    #power-mode-wrapper .custom-sound-row .custom-sound-label {
+    .custom-sound-row .custom-sound-label {
       flex: 1;
       margin: 0;
       font-size: 14px;
@@ -1337,21 +654,23 @@
       cursor: default;
     }
 
-    #power-mode-wrapper .custom-sound-row .btn[for] {
+    .custom-sound-row .btn[for] {
       flex-shrink: 0;
       margin-left: 12px;
       content: 'Tải lên';
     }
 
-    [data-theme='light'] #customSoundsContainer, [data-theme='pastel'] #customSoundsContainer {
+    [data-theme='light'] #customSoundsContainer,
+    [data-theme='pastel'] #customSoundsContainer {
       border-color: rgba(0, 0, 0, 0.08);
     }
-    [data-theme='light'] .custom-sound-row, [data-theme='pastel'] .custom-sound-row {
+    [data-theme='light'] .custom-sound-row,
+    [data-theme='pastel'] .custom-sound-row {
       border-color: rgba(0, 0, 0, 0.08);
       background: rgba(var(--panel-rgb), 0.85);
     }
 
-    #power-mode-wrapper .custom-sound-row .custom-sound-label {
+    .custom-sound-row .custom-sound-label {
       flex: 1;
       margin: 0;
       font-size: 14px;
@@ -1360,7 +679,7 @@
       cursor: default;
     }
 
-    #power-mode-wrapper .custom-sound-row .btn[for] {
+    .custom-sound-row .btn[for] {
       flex-shrink: 0;
       margin-left: 12px;
       /* Văn bản hiển thị đã đặt trong HTML; khai báo content nhằm nhấn mạnh mục đích nút */
@@ -1370,12 +689,13 @@
     /* END: CẢI THIỆN GIAO DIỆN ÂM THANH (HTML Refactor)         */
     /* ========================================================= */
     .sound-permission-bar .msg { font-size: 14px; color: var(--text); }
-    #power-mode-wrapper .draggable-timer { text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.9); }
+    .draggable-timer { text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.9); }
 
     /* Giảm/loại bỏ bóng chữ cho theme sáng để tránh nhòe/lóa */
     body[data-theme='light'],
     body[data-theme='pastel'] { text-shadow: none; }
-    body[data-theme='light'] .draggable-timer, body[data-theme='pastel'] .draggable-timer { text-shadow: none; }
+    body[data-theme='light'] .draggable-timer,
+    body[data-theme='pastel'] .draggable-timer { text-shadow: none; }
 
     /* ============================================= */
 /* ========================================================= */
@@ -1404,7 +724,17 @@
 .app-nav {
     border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
-#power-mode-wrapper .panel-bg, #power-mode-wrapper .modal-card, #power-mode-wrapper .actions-menu, #power-mode-wrapper .nav-btn .tooltip, #power-mode-wrapper .draggable-timer, #power-mode-wrapper .sound-permission-bar, #power-mode-wrapper .toast, #power-mode-wrapper .topic-item, #power-mode-wrapper .stat-card, #power-mode-wrapper .hist-item, #power-mode-wrapper .method-item {
+.panel-bg,
+.modal-card,
+.actions-menu,
+.nav-btn .tooltip,
+.draggable-timer, 
+.sound-permission-bar,
+.toast,
+.topic-item,
+.stat-card,
+.hist-item,
+.method-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -1446,10 +776,10 @@
 [data-theme='pastel'] .tab-nav {
     border-bottom-color: rgba(0, 0, 0, 0.1);
 }
-#power-mode-wrapper .subtopic-btn {
+.subtopic-btn {
     background-color: transparent;
 }
-#power-mode-wrapper .subtopic-btn:hover {
+.subtopic-btn:hover {
     background-color: transparent; /* Hover transparent to avoid blue background */
 }
 /* Khi nội dung mở, thêm đường phân cách ở trên nội dung */
@@ -1458,27 +788,28 @@
     /* margin-top: 8px;  <-- Đã xóa */
     padding-top: 8px; /* <-- Giữ lại một chút padding để nội dung không dính vào đường kẻ */
 }
-    [data-theme='light'] .method-item > .method-content:not([hidden]), [data-theme='pastel'] .method-item > .method-content:not([hidden]) {
+    [data-theme='light'] .method-item > .method-content:not([hidden]),
+    [data-theme='pastel'] .method-item > .method-content:not([hidden]) {
         border-top-color: rgba(0, 0, 0, 0.1);
     }
 
     /* Editor container (single pane, Rich Text) */
     .editor-container { height: 350px; }
-    #power-mode-wrapper .editable-content { height: 100%; border: 1px solid var(--muted); border-radius: 10px; padding: 10px; overflow-y: auto; background: var(--bg); }
-    #power-mode-wrapper .editable-content:focus-within { border-color: var(--acc); outline: none; }
-    #power-mode-wrapper .editable-content h4 { color: var(--acc-2); font-size: 1.1em; margin-top: 1.5em; margin-bottom: 0.5em; }
-    #power-mode-wrapper .editable-content strong, #power-mode-wrapper .editable-content b { color: var(--acc); font-weight: 600; }
-    #power-mode-wrapper .editable-content ol, #power-mode-wrapper .editable-content ul { padding-left: 20px; }
+    .editable-content { height: 100%; border: 1px solid var(--muted); border-radius: 10px; padding: 10px; overflow-y: auto; background: var(--bg); }
+    .editable-content:focus-within { border-color: var(--acc); outline: none; }
+    .editable-content h4 { color: var(--acc-2); font-size: 1.1em; margin-top: 1.5em; margin-bottom: 0.5em; }
+    .editable-content strong, .editable-content b { color: var(--acc); font-weight: 600; }
+    .editable-content ol, .editable-content ul { padding-left: 20px; }
 
     /* Editor toolbar for Methods modal */
     .editor-toolbar { display: flex; gap: 6px; margin-bottom: 6px; padding: 4px; background: var(--muted); border-radius: 8px; }
-    #power-mode-wrapper .editor-toolbar button { font-weight: bold; width: 32px; height: 32px; padding: 0; }
-    #power-mode-wrapper .editor-toolbar .btn.ghost:hover { background-color: rgba(var(--acc-rgb, 108, 140, 255), 0.15); }
-    #power-mode-wrapper .editor-toolbar .btn.ghost.active { background-color: rgba(var(--acc-rgb, 108, 140, 255), 0.25); }
-    #power-mode-wrapper .color-picker-wrapper { position: relative; }
-    #power-mode-wrapper .color-palette { position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; padding: 6px; border-radius: 8px; border: 1px solid var(--muted); background: var(--panel); box-shadow: var(--shadow); z-index: 10; }
-    #power-mode-wrapper .color-swatch { width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.5); cursor: pointer; transition: transform 0.15s ease; }
-    #power-mode-wrapper .color-swatch:hover { transform: scale(1.15); }
+    .editor-toolbar button { font-weight: bold; width: 32px; height: 32px; padding: 0; }
+    .editor-toolbar .btn.ghost:hover { background-color: rgba(var(--acc-rgb, 108, 140, 255), 0.15); }
+    .editor-toolbar .btn.ghost.active { background-color: rgba(var(--acc-rgb, 108, 140, 255), 0.25); }
+    .color-picker-wrapper { position: relative; }
+    .color-palette { position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; padding: 6px; border-radius: 8px; border: 1px solid var(--muted); background: var(--panel); box-shadow: var(--shadow); z-index: 10; }
+    .color-swatch { width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.5); cursor: pointer; transition: transform 0.15s ease; }
+    .color-swatch:hover { transform: scale(1.15); }
 
     /* ========================================================= */
     /* START: CẬP NHẬT GIAO DIỆN TIÊU ĐỀ KHO TRI THỨC            */
@@ -1507,7 +838,8 @@
         margin-left: 8px; /* Thêm một chút khoảng đệm bên trái */
     }
 
-    #power-mode-wrapper .method-item:hover .topic-actions, #power-mode-wrapper .method-item:focus-within .topic-actions {
+    .method-item:hover .topic-actions,
+    .method-item:focus-within .topic-actions {
         opacity: 1;
         visibility: visible;
     }
@@ -1527,362 +859,21 @@
         min-width: 0; /* Cho phép phần tử co lại nhỏ hơn nội dung của nó */
     }
 
-    #power-mode-wrapper .topic-title, #power-mode-wrapper .subtopic-btn, #power-mode-wrapper .note-content, #power-mode-wrapper .subtopic-todo-list label, #power-mode-wrapper .hist-item > div, #power-mode-wrapper .method-title { /* <--- Bổ sung cho Kho Tri Thức */
+    .topic-title,
+    .subtopic-btn,
+    .note-content,
+    .subtopic-todo-list label,
+    .hist-item > div,
+    .method-title { /* <--- Bổ sung cho Kho Tri Thức */
         word-break: break-word;      /* Tự động ngắt các từ quá dài */
         overflow-wrap: break-word; /* Đảm bảo ngắt dòng cho chuỗi dài */
     }
     /* ========================================================= */
     /* END: SỬA LỖI TRÀN GIAO DIỆN VỚI VĂN BẢN DÀI (FLEXBOX FIX) */
 
-    
-    /* === Ambiance Mode Refresh Overrides === */
-    #ambiance-mode-wrapper {
-      position: relative;
-      display: flex;
-      min-height: 100vh;
-      width: 100%;
-      overflow: hidden;
-      color: var(--text);
-      font-family: 'Segoe UI Variable', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-    }
-    #ambiance-mode-wrapper.hidden { display: none !important; }
-    #ambiance-mode-wrapper .hidden { display: none !important; }
-    #ambiance-mode-wrapper .ambiance-background {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-    }
-    #ambiance-mode-wrapper .ambiance-bg-video,
-    #ambiance-mode-wrapper .ambiance-bg-image {
-      position: absolute;
-      inset: 0;
-    }
-    #ambiance-mode-wrapper .ambiance-bg-video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      transition: opacity .6s ease;
-    }
-    #ambiance-mode-wrapper .ambiance-bg-video.is-active {
-      opacity: 1;
-    }
-    #ambiance-mode-wrapper .ambiance-bg-image {
-      background-image: var(--ambiance-bg-image, var(--bg-image, radial-gradient(1200px 800px at 10% -10%, #20285b 0%, #0f1222 50%, #0b0e1a 100%)));
-      background-size: cover;
-      background-position: center;
-      transform: scale(1.02);
-      transition: transform 12s ease, opacity .6s ease;
-      filter: saturate(1.05);
-    }
-    #ambiance-mode-wrapper:hover .ambiance-bg-image {
-      transform: scale(1.05);
-    }
-    #ambiance-mode-wrapper .ambiance-root {
-      position: relative;
-      z-index: 2;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 56px 24px 32px;
-      gap: 32px;
-      transition: opacity .3s ease;
-    }
-    #ambiance-mode-wrapper .ambiance-main {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 24px;
-      text-align: center;
-      padding: 32px 40px;
-      background: rgba(8, 10, 20, 0.32);
-      border-radius: 36px;
-      border: 1px solid rgba(255,255,255,0.12);
-      backdrop-filter: blur(14px);
-      box-shadow: 0 30px 80px rgba(0,0,0,0.28);
-      max-width: 560px;
-      width: min(100%, 520px);
-    }
-    #ambiance-mode-wrapper .ambiance-clock {
-      font-size: clamp(4.5rem, 10vw, 7.5rem);
-      font-weight: 700;
-      letter-spacing: 0.12em;
-    }
-    #ambiance-mode-wrapper .ambiance-controls {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    #ambiance-mode-wrapper .ambiance-btn {
-      min-width: 140px;
-      padding: 14px 28px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(12, 14, 28, 0.35);
-      color: var(--text);
-      font-size: 0.95rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
-    }
-    #ambiance-mode-wrapper .ambiance-btn.primary {
-      background: var(--acc);
-      color: #05070f;
-      border-color: transparent;
-      box-shadow: 0 18px 40px rgba(108,140,255,0.35);
-    }
-    #ambiance-mode-wrapper .ambiance-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 32px rgba(0,0,0,0.25);
-    }
-    #ambiance-mode-wrapper .ambiance-toolbar {
-      position: fixed;
-      top: 24px;
-      right: 24px;
-      display: flex;
-      gap: 12px;
-      padding: 12px 16px;
-      background: rgba(8, 10, 20, 0.55);
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.12);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 18px 45px rgba(0,0,0,0.28);
-      z-index: 2100;
-    }
-    #ambiance-mode-wrapper .ambiance-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      border: none;
-      background: transparent;
-      color: rgba(255,255,255,0.85);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      cursor: pointer;
-      transition: background .2s ease, transform .2s ease, color .2s ease;
-    }
-    #ambiance-mode-wrapper .ambiance-icon:hover {
-      background: rgba(255,255,255,0.16);
-      color: white;
-      transform: translateY(-2px);
-    }
-    #ambiance-mode-wrapper .ambiance-modal {
-      backdrop-filter: blur(14px);
-      background: rgba(6, 8, 16, 0.6);
-    }
-    #ambiance-mode-wrapper .ambiance-modal-content {
-      background: rgba(12, 14, 28, 0.88);
-    }
-    #ambiance-mode-wrapper .ambiance-bg-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 16px;
-    }
-    #ambiance-mode-wrapper .ambiance-bg-card {
-      position: relative;
-      padding-top: 60%;
-      border-radius: 20px;
-      border: 1px solid transparent;
-      background-size: cover;
-      background-position: center;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform .25s ease, border-color .2s ease, box-shadow .25s ease;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-    }
-    #ambiance-mode-wrapper .ambiance-bg-card span {
-      position: absolute;
-      bottom: 10px;
-      left: 12px;
-      right: 12px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(8, 10, 20, 0.55);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      text-align: center;
-    }
-    #ambiance-mode-wrapper .ambiance-bg-card::after {
-      content: attr(data-badge);
-      position: absolute;
-      top: 10px;
-      right: 12px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      background: rgba(8, 10, 20, 0.55);
-      color: rgba(255,255,255,0.8);
-    }
-    #ambiance-mode-wrapper .ambiance-bg-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(255,255,255,0.32);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.25);
-    }
-    #ambiance-mode-wrapper .ambiance-bg-card.active {
-      border-color: var(--acc);
-      box-shadow: 0 18px 48px rgba(108,140,255,0.35);
-    }
-    #ambiance-mode-wrapper .ambiance-upload {
-      display: flex;
-      justify-content: flex-end;
-    }
-    #ambiance-mode-wrapper .ambiance-upload label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.08);
-      cursor: pointer;
-      font-size: 13px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      transition: background .2s ease, transform .2s ease;
-    }
-    #ambiance-mode-wrapper .ambiance-upload label:hover {
-      background: rgba(255,255,255,0.18);
-      transform: translateY(-1px);
-    }
-    #ambiance-mode-wrapper .ambiance-sound-item {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 14px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    #ambiance-mode-wrapper .ambiance-sound-item:last-child {
-      border-bottom: none;
-    }
-    #ambiance-mode-wrapper .ambiance-sound-toggle {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.08);
-      color: white;
-      font-size: 18px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: background .2s ease, transform .2s ease, border-color .2s ease;
-    }
-    #ambiance-mode-wrapper .ambiance-sound-toggle.active {
-      background: var(--acc);
-      border-color: transparent;
-      color: #05070f;
-      box-shadow: 0 10px 22px rgba(108,140,255,0.32);
-    }
-    #ambiance-mode-wrapper .ambiance-sound-toggle:hover {
-      transform: translateY(-2px);
-    }
-    #ambiance-mode-wrapper .ambiance-sound-meta {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    #ambiance-mode-wrapper .ambiance-slider {
-      accent-color: var(--acc);
-      width: 140px;
-    }
-    #ambiance-mode-wrapper .ambiance-empty {
-      padding: 24px;
-      text-align: center;
-      border: 1px dashed rgba(255,255,255,0.2);
-      border-radius: 20px;
-      background: rgba(255,255,255,0.04);
-      color: rgba(255,255,255,0.65);
-    }
-    #ambiance-mode-wrapper.zen-active .ambiance-root,
-    #ambiance-mode-wrapper.zen-active .ambiance-toolbar {
-      opacity: 0;
-      pointer-events: none;
-    }
-    #ambiance-mode-wrapper.zen-active.zen-show .ambiance-root,
-    #ambiance-mode-wrapper.zen-active.zen-show .ambiance-toolbar {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    #ambiance-mode-wrapper .ambiance-zen-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-    }
-    #ambiance-mode-wrapper.zen-active .ambiance-zen-overlay {
-      display: flex;
-    }
-    #ambiance-mode-wrapper .ambiance-zen-overlay .hint {
-      background: rgba(8, 10, 20, 0.6);
-      border: 1px solid rgba(255,255,255,0.18);
-      padding: 12px 22px;
-      border-radius: 999px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      font-size: 12px;
-      color: rgba(255,255,255,0.75);
-    }
-    @media (max-width: 768px) {
-      #ambiance-mode-wrapper .ambiance-toolbar {
-        top: auto;
-        bottom: 24px;
-        right: 50%;
-        transform: translateX(50%);
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      #ambiance-mode-wrapper .ambiance-main {
-        padding: 28px 24px;
-        gap: 20px;
-        width: 100%;
-      }
-      #ambiance-mode-wrapper .ambiance-btn {
-        min-width: 120px;
-      }
-    }
-</style>
+    </style>
 </head>
-<body data-theme="default">
-    <div id="modeSelectionModal" class="mode-modal hidden">
-        <div class="mode-modal__content">
-            <h2>Chọn phong cách bắt đầu</h2>
-            <p>Pomodoro Podomo hỗ trợ hai trải nghiệm khác nhau. Bạn có thể chuyển đổi bất kỳ lúc nào trong Cài đặt.</p>
-            <div class="mode-modal__actions">
-                <button class="mode-choice" data-mode-choice="power">
-                    <strong>Power Mode</strong>
-                    <span>Giao diện đầy đủ, phù hợp khi quản lý nhiều tác vụ.</span>
-                </button>
-                <button class="mode-choice" data-mode-choice="ambiance">
-                    <strong>Ambiance Mode</strong>
-                    <span>Tối giản, tập trung tuyệt đối (studyfoc.us style).</span>
-                </button>
-            </div>
-        </div>
-    </div>
-    <div id="pipCtn" class="hidden">
-        <canvas id="pipCanvas" width="320" height="180"></canvas>
-        <video id="pipVideo" muted playsinline></video>
-    </div>
-    <div id="power-mode-wrapper">
-        <div class="app" id="app">
+<body data-theme="default"> <div class="app" id="app">
     <nav class="app-nav">
         <button class="nav-btn active" id="navBtnTimer" data-view="timer" aria-label="Đồng hồ">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -2249,13 +1240,6 @@
                                     <option value="space">Space Station</option>
                                 </select>
                           </label>
-                        <div class="settings-row-toggle">
-                            <label for="set_ambianceMode">Bat Che do Ambiance (Toi gian)</label>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="set_ambianceMode">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
                       </div>
                       <div class="row" style="margin-top: 12px;">
                           <label>Chế độ hiển thị nền
@@ -2505,6 +1489,7 @@
       DND.src = item; DND.from = container; DND.selector = selector; DND.group = group;
       e.dataTransfer.effectAllowed = 'move';
       try { e.dataTransfer.setData('text/plain', ''); } catch(_) {}
+    };
     const handleDragOver = (e) => {
       if (!DND.src) return;
       // Only allow drop if same selector and group matches (or no group)
@@ -2513,6 +1498,7 @@
       const target = closestItem(e, selector);
       if (!target) return;
       e.preventDefault();
+    };
     const handleDrop = (e) => {
       if (!DND.src) return;
       const sameGroup = (!group && !DND.group) || (group && DND.group && group === DND.group);
@@ -3142,562 +2128,6 @@
       "Kiểm tra nhịp thở – nếu gấp gáp, hãy làm chậm lại.",
       "Tự nhắc: Nghỉ ngơi đúng cách là để làm việc tốt hơn!"
     ];
-    const ambianceBackgrounds = [
-  { id: 'lofi-neon', label: 'Lofi Neon Skyline', category: 'Động (Lofi)', type: 'video', value: 'https://storage.googleapis.com/coverr-main/mp4/Living_Room.mp4', preview: 'linear-gradient(135deg, #1b1c3a 0%, #4b2d7f 48%, #f6d365 100%)' },
-  { id: 'lofi-rainy-window', label: 'Rainy Window', category: 'Động (Lofi)', type: 'video', value: 'https://storage.googleapis.com/coverr-main/mp4/Rainy_Window.mp4', preview: 'linear-gradient(140deg, #090b1a 0%, #203a43 60%, #2c5364 100%)' },
-  { id: 'nature-river', label: 'Emerald River', category: 'Động (Thiên nhiên)', type: 'video', value: 'https://storage.googleapis.com/coverr-main/mp4/Misty_Forest.mp4', preview: 'linear-gradient(140deg, #0b3d2e 0%, #14532d 55%, #2f9e44 100%)' },
-  { id: 'nature-sunrise', label: 'Sunrise Ridge', category: 'Động (Thiên nhiên)', type: 'video', value: 'https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4', preview: 'linear-gradient(120deg, #0f2027 0%, #203a43 50%, #2c5364 100%)' },
-  { id: 'arch-glass', label: 'Glass Atrium', category: 'Tĩnh (Kiến trúc)', type: 'image', value: 'https://images.unsplash.com/photo-1505843795480-5cfb3c01f105?auto=format&fit=crop&w=1920&q=80', preview: 'https://images.unsplash.com/photo-1505843795480-5cfb3c01f105?auto=format&fit=crop&w=640&q=40' },
-  { id: 'arch-minimal-city', label: 'Minimal City', category: 'Tĩnh (Kiến trúc)', type: 'image', value: 'https://images.unsplash.com/photo-1529429617124-aee7e2663d7b?auto=format&fit=crop&w=1920&q=80', preview: 'https://images.unsplash.com/photo-1529429617124-aee7e2663d7b?auto=format&fit=crop&w=640&q=40' },
-  { id: 'minimal-dawn', label: 'Soft Dawn', category: 'Tĩnh (Tối giản)', type: 'gradient', value: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)', preview: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)' },
-  { id: 'minimal-midnight', label: 'Midnight Fade', category: 'Tĩnh (Tối giản)', type: 'gradient', value: 'linear-gradient(135deg, #141e30 0%, #243b55 100%)', preview: 'linear-gradient(135deg, #141e30 0%, #243b55 100%)' }
-];
-    const ambianceSoundLibrary = [
-  { id: 'rain', label: 'Mưa rào', category: 'Thiên nhiên', generator: 'rain' },
-  { id: 'waves', label: 'Sóng biển', category: 'Thiên nhiên', generator: 'waves' },
-  { id: 'fire', label: 'Lò sưởi', category: 'Thiên nhiên', generator: 'fire' },
-  { id: 'vinyl', label: 'Vinyl Crackle', category: 'Lofi', generator: 'vinyl' },
-  { id: 'keys', label: 'Lofi Keys', category: 'Lofi', generator: 'keys' },
-  { id: 'cafe', label: 'Quán cà phê', category: 'Thành thị', generator: 'cafe' },
-  { id: 'metro', label: 'Night Drive', category: 'Thành thị', generator: 'metro' }
-];
-    const ambianceState = {
-      backgroundCategory: 'all',
-      soundCategory: 'all',
-      zenActive: false,
-      topicsStep: 'topics',
-      topicsActiveId: ''
-    };
-    function ensureAmbianceUploads() {
-      if (!data || !data.settings) return [];
-      if (!Array.isArray(data.settings.ambianceUploads)) {
-        data.settings.ambianceUploads = [];
-        return data.settings.ambianceUploads;
-      }
-      const uploads = data.settings.ambianceUploads;
-      for (let i = uploads.length - 1; i >= 0; i--) {
-        const entry = uploads[i];
-        if (!entry) {
-          uploads.splice(i, 1);
-          continue;
-        }
-        if (typeof entry === 'string') {
-          uploads[i] = { id: entry, fileId: entry, label: 'Ảnh tải lên' };
-          continue;
-        }
-        if (!entry.id && entry.fileId) {
-          entry.id = entry.fileId;
-        }
-        if (!entry.fileId) {
-          entry.fileId = entry.id;
-        }
-        if (!entry.label) {
-          entry.label = 'Ảnh tải lên';
-        }
-      }
-      return uploads;
-    }
-    function ensureAmbianceCustomSounds() {
-      if (!data || !data.settings) return [];
-      if (!Array.isArray(data.settings.ambianceCustomSounds)) {
-        data.settings.ambianceCustomSounds = [];
-      }
-      return data.settings.ambianceCustomSounds;
-    }
-    function getAmbianceSoundDefinitions() {
-      const base = Array.isArray(ambianceSoundLibrary) ? [...ambianceSoundLibrary] : [];
-      const customs = ensureAmbianceCustomSounds()
-        .map(entry => {
-          if (!entry) return null;
-          const fileId = entry.fileId || entry.id || '';
-          if (!fileId && !entry.id) {
-            return null;
-          }
-          if (!entry.id) {
-            entry.id = `custom_sound_${Math.random().toString(36).slice(2, 9)}`;
-          }
-          if (!entry.fileId) {
-            entry.fileId = fileId || entry.id;
-          }
-          if (!entry.fileId) return null;
-          return {
-            id: entry.id,
-            label: entry.label || 'Âm thanh tùy chỉnh',
-            category: 'Tùy chỉnh',
-            type: 'custom',
-            customSoundId: entry.fileId
-          };
-        })
-        .filter(Boolean);
-      return base.concat(customs);
-    }
-    function findAmbianceSoundDefinition(id) {
-      return getAmbianceSoundDefinitions().find(def => def.id === id) || null;
-    }
-    function getSelectedAmbianceBackground() {
-      const key = data.settings.ambianceSelectedBackground || "";
-      if (!key) return null;
-      if (key.startsWith("builtin:")) {
-        const id = key.replace("builtin:", "");
-        return ambianceBackgrounds.find(bg => bg.id === id) || null;
-      }
-      if (key.startsWith("upload:")) {
-        const id = key.replace("upload:", "");
-        const uploads = ensureAmbianceUploads();
-        const item = uploads.find(entry => entry.id === id);
-        if (!item) return null;
-        return { id, label: item.label || "?nh t?i l?n", type: "upload", value: id, preview: item.preview || "" };
-      }
-      return null;
-    }
-    const pipManager = (() => {
-      let canvas;
-      let ctx;
-      let video;
-      let stream;
-      let active = false;
-      const imageCache = new Map();
-      let lastFrame = { time: "00:00", state: "IDLE", background: "#0b0e1a" };
-
-      function ensureCanvas() {
-        if (!canvas) canvas = document.getElementById("pipCanvas");
-        if (!ctx && canvas) ctx = canvas.getContext("2d");
-        if (!video) video = document.getElementById("pipVideo");
-        return canvas && ctx && video;
-      }
-
-      function splitGradientArgs(input) {
-        const result = [];
-        let current = "";
-        let depth = 0;
-        for (let i = 0; i < input.length; i++) {
-          const char = input[i];
-          if (char === '(') {
-            depth++;
-            current += char;
-            continue;
-          }
-          if (char === ')') {
-            depth = Math.max(0, depth - 1);
-            current += char;
-            continue;
-          }
-          if (char === ',' && depth === 0) {
-            if (current.trim()) result.push(current.trim());
-            current = "";
-            continue;
-          }
-          current += char;
-        }
-        if (current.trim()) result.push(current.trim());
-        return result;
-      }
-
-      function parseAngle(part) {
-        if (!part) return 180;
-        const lower = part.toLowerCase();
-        if (lower.includes('to ')) {
-          if (lower.includes('right') && lower.includes('bottom')) return 45;
-          if (lower.includes('right') && lower.includes('top')) return -45;
-          if (lower.includes('left') && lower.includes('bottom')) return 135;
-          if (lower.includes('left') && lower.includes('top')) return -135;
-          if (lower.includes('right')) return 0;
-          if (lower.includes('left')) return 180;
-          if (lower.includes('bottom')) return 90;
-          if (lower.includes('top')) return -90;
-        }
-        if (lower.includes('deg')) {
-          const val = parseFloat(lower);
-          return Number.isFinite(val) ? val : 180;
-        }
-        if (lower.includes('turn')) {
-          const val = parseFloat(lower);
-          return Number.isFinite(val) ? val * 360 : 180;
-        }
-        if (lower.includes('rad')) {
-          const val = parseFloat(lower);
-          return Number.isFinite(val) ? (val * 180) / Math.PI : 180;
-        }
-        return 180;
-      }
-
-      function parseColorStop(stop, index, total) {
-        const effectiveTotal = Math.max(total - 1, 1);
-        let position = index / effectiveTotal;
-        let token = stop.trim();
-        if (!token) return { color: '#000000', position };
-        let depth = 0;
-        let splitIndex = -1;
-        for (let i = token.length - 1; i >= 0; i--) {
-          const char = token[i];
-          if (char === ')') { depth += 1; continue; }
-          if (char === '(') { depth = Math.max(0, depth - 1); continue; }
-          if (char === ' ' && depth === 0) { splitIndex = i; break; }
-        }
-        if (splitIndex !== -1) {
-          const maybePos = token.slice(splitIndex + 1).trim();
-          const maybeColor = token.slice(0, splitIndex).trim();
-          if (maybePos) {
-            if (maybePos.endsWith('%')) {
-              const val = parseFloat(maybePos);
-              if (!Number.isNaN(val)) position = Math.min(1, Math.max(0, val / 100));
-            } else {
-              const val = parseFloat(maybePos);
-              if (!Number.isNaN(val)) position = Math.min(1, Math.max(0, val));
-            }
-          }
-          if (maybeColor) token = maybeColor;
-        }
-        return { color: token, position };
-      }
-
-      function drawLinearGradient(gradientStr) {
-        if (!ensureCanvas()) return false;
-        const match = gradientStr.match(/linear-gradient\((.*)\)/i);
-        if (!match) return false;
-        const args = splitGradientArgs(match[1]);
-        if (!args.length) return false;
-        let angleDeg = 180;
-        let colorParts = args;
-        if (args.length > 1) {
-          const first = args[0];
-          if (/deg|rad|turn|to\s+/i.test(first)) {
-            angleDeg = parseAngle(first);
-            colorParts = args.slice(1);
-          }
-        }
-        if (!colorParts.length) colorParts = args;
-        const rad = angleDeg * Math.PI / 180;
-        const halfW = canvas.width / 2;
-        const halfH = canvas.height / 2;
-        const x = Math.cos(rad);
-        const y = Math.sin(rad);
-        const gradient = ctx.createLinearGradient(halfW - x * halfW, halfH - y * halfH, halfW + x * halfW, halfH + y * halfH);
-        colorParts.forEach((stop, index) => {
-          const { color, position } = parseColorStop(stop, index, colorParts.length);
-          try { gradient.addColorStop(position, color); } catch (_) {}
-        });
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        return true;
-      }
-
-      function drawRadialGradient(gradientStr) {
-        if (!ensureCanvas()) return false;
-        const match = gradientStr.match(/radial-gradient\((.*)\)/i);
-        if (!match) return false;
-        const args = splitGradientArgs(match[1]);
-        if (!args.length) return false;
-        let colorParts = args;
-        const first = args[0];
-        if (/^(circle|ellipse)/i.test(first) || /\bat\s+/i.test(first)) {
-          colorParts = args.slice(1);
-        }
-        if (!colorParts.length) colorParts = args;
-        const radius = Math.max(canvas.width, canvas.height);
-        const gradient = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, radius);
-        colorParts.forEach((stop, index) => {
-          const { color, position } = parseColorStop(stop, index, colorParts.length);
-          try { gradient.addColorStop(position, color); } catch (_) {}
-        });
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        return true;
-      }
-
-      function drawImageBackground(url) {
-        if (!url) return false;
-        const cached = imageCache.get(url);
-        if (cached && cached.loaded) {
-          try {
-            ctx.drawImage(cached.img, 0, 0, canvas.width, canvas.height);
-            return true;
-          } catch (_) {
-            return false;
-          }
-        }
-        if (!cached) {
-          const img = new Image();
-          imageCache.set(url, { img, loaded: false });
-          img.crossOrigin = 'anonymous';
-          img.onload = () => {
-            const entry = imageCache.get(url);
-            if (entry) entry.loaded = true;
-            renderFrame();
-          };
-          img.onerror = () => {
-            imageCache.delete(url);
-          };
-          img.src = url;
-        }
-        return false;
-      }
-
-      function drawBackground(backgroundInfo) {
-        if (!backgroundInfo || (typeof backgroundInfo === 'string' && !backgroundInfo.trim())) {
-          return false;
-        }
-        const value = typeof backgroundInfo === 'string' ? backgroundInfo.trim() : '';
-        if (!value) return false;
-        if (/^linear-gradient/i.test(value)) {
-          return drawLinearGradient(value);
-        }
-        if (/^radial-gradient/i.test(value)) {
-          return drawRadialGradient(value);
-        }
-        if (/^url\((.*)\)$/i.test(value)) {
-          const match = value.match(/^url\((.*)\)$/i);
-          const raw = match && match[1] ? match[1].trim() : '';
-          const url = raw.replace(/^['"]|['"]$/g, '');
-          return drawImageBackground(url);
-        }
-        try {
-          ctx.fillStyle = value;
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          return true;
-        } catch (_) {
-          return false;
-        }
-      }
-
-      function renderFrame() {
-        if (!ensureCanvas()) return;
-        const frame = lastFrame;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        if (!drawBackground(frame.background)) {
-          ctx.fillStyle = '#0b0e1a';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-        ctx.fillStyle = '#6c8cff';
-        ctx.font = 'bold 64px "Segoe UI", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(frame.time, canvas.width / 2, canvas.height / 2);
-        ctx.font = '18px "Segoe UI", sans-serif';
-        ctx.fillStyle = '#ffffff';
-        ctx.fillText(String(frame.state || '').toUpperCase(), canvas.width / 2, canvas.height - 28);
-      }
-
-      async function enterPiP() {
-        if (!ensureCanvas()) return false;
-        if (!stream && canvas) {
-          stream = canvas.captureStream(24);
-          if (video) {
-            video.srcObject = stream;
-            try { await video.play(); } catch (_) {}
-          }
-        }
-        try {
-          if (video) {
-            await video.requestPictureInPicture();
-            active = true;
-            renderFrame();
-            return true;
-          }
-        } catch (err) {
-          console.error('PiP request failed', err);
-          toast('Không thể bật Picture-in-Picture.');
-        }
-        return false;
-      }
-
-      async function exitPiP() {
-        try {
-          if (document.pictureInPictureElement) {
-            await document.exitPictureInPicture();
-          }
-        } catch (err) {
-          console.error('PiP exit failed', err);
-        }
-        active = false;
-      }
-
-      document.addEventListener('leavepictureinpicture', () => { active = false; });
-
-      return {
-        async toggle() {
-          if (!ensureCanvas()) {
-            toast('Picture-in-Picture không khả dụng trên trình duyệt này.');
-            return;
-          }
-          if (document.pictureInPictureElement) {
-            await exitPiP();
-          } else {
-            await enterPiP();
-          }
-        },
-        update(timeStr, state, backgroundInfo) {
-          lastFrame = {
-            time: timeStr || '00:00',
-            state: state || '',
-            background: backgroundInfo || '#0b0e1a'
-          };
-          renderFrame();
-        },
-        isActive() {
-          return active || !!document.pictureInPictureElement;
-        }
-      };
-    })();
-
-    const ambianceSoundEngine = (() => {
-      const nodes = new Map();
-      let context = null;
-      let mixerSaveTimer = null;
-
-      function ensureState() {
-        if (!data.settings.ambianceMixer || typeof data.settings.ambianceMixer !== 'object') {
-          data.settings.ambianceMixer = {};
-        }
-        return data.settings.ambianceMixer;
-      }
-      function ensureContext() {
-        if (context) return true;
-        const Ctor = window.AudioContext || window.webkitAudioContext;
-        if (!Ctor) {
-          toast('Trình duyệt không hỗ trợ Sound Mixer.');
-          return false;
-        }
-        context = new Ctor();
-        return true;
-      }
-      function scheduleSave() {
-        clearTimeout(mixerSaveTimer);
-        mixerSaveTimer = setTimeout(() => {
-          saveData().catch(()=>{});
-        }, 400);
-      }
-      function createNoiseBuffer() {
-        if (!context) return null;
-        const size = context.sampleRate * 2;
-        const buffer = context.createBuffer(1, size, context.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < size; i++) {
-          data[i] = (Math.random() * 2 - 1);
-        }
-        return buffer;
-      }
-      async function ensureNode(def) {
-        if (!context) return null;
-        let entry = nodes.get(def.id);
-        if (entry) return entry;
-        if (def.customSoundId) {
-          const url = await getStoredFileUrl(def.customSoundId);
-          if (!url) return null;
-          const audio = new Audio(url);
-          audio.loop = true;
-          audio.crossOrigin = 'anonymous';
-          audio.volume = 1;
-          const source = context.createMediaElementSource(audio);
-          const gain = context.createGain();
-          gain.gain.value = 0;
-          source.connect(gain);
-          gain.connect(context.destination);
-          entry = { gain, source, audio, type: 'media' };
-          nodes.set(def.id, entry);
-          try {
-            await audio.play();
-          } catch (_) {
-            audio.addEventListener('canplay', () => audio.play().catch(() => {}), { once: true });
-          }
-          return entry;
-        }
-        const buffer = createNoiseBuffer();
-        if (!buffer) return null;
-        const source = context.createBufferSource();
-        source.buffer = buffer;
-        source.loop = true;
-        const filter = context.createBiquadFilter();
-        switch (def.generator) {
-          case 'rain':
-            filter.type = 'highpass';
-            filter.frequency.value = 500;
-            filter.Q.value = 0.8;
-            break;
-          case 'fire':
-            filter.type = 'bandpass';
-            filter.frequency.value = 320;
-            filter.Q.value = 1.2;
-            break;
-          case 'waves':
-            filter.type = 'lowpass';
-            filter.frequency.value = 420;
-            filter.Q.value = 0.9;
-            break;
-          case 'cafe':
-            filter.type = 'bandpass';
-            filter.frequency.value = 820;
-            filter.Q.value = 1.8;
-            break;
-          case 'vinyl':
-            filter.type = 'lowpass';
-            filter.frequency.value = 280;
-            filter.Q.value = 1.1;
-            break;
-          case 'keys':
-            filter.type = 'bandpass';
-            filter.frequency.value = 1200;
-            filter.Q.value = 1.6;
-            break;
-          case 'metro':
-            filter.type = 'bandpass';
-            filter.frequency.value = 650;
-            filter.Q.value = 1.4;
-            break;
-          default:
-            filter.type = 'lowpass';
-            filter.frequency.value = 600;
-        }
-        const gain = context.createGain();
-        gain.gain.value = 0;
-        source.connect(filter);
-        filter.connect(gain);
-        gain.connect(context.destination);
-        source.start();
-        entry = { gain, source, filter };
-        nodes.set(def.id, entry);
-        return entry;
-      }
-      async function setVolumeInternal(def, volume) {
-        if (!ensureContext()) return 0;
-        await context.resume();
-        const node = await ensureNode(def);
-        if (!node) return 0;
-        if (node.audio && node.audio.paused) {
-          try { await node.audio.play(); } catch (_) {}
-        }
-        node.gain.gain.cancelScheduledValues(context.currentTime);
-        node.gain.gain.setTargetAtTime(volume, context.currentTime, 0.2);
-        const mix = ensureState();
-        mix[def.id] = { volume, enabled: volume > 0 };
-        scheduleSave();
-        return volume;
-      }
-      return {
-        getVolume(id) {
-          const mix = ensureState();
-          return mix[id]?.volume ?? 0;
-        },
-        async setVolume(id, value) {
-          const def = findAmbianceSoundDefinition(id);
-          if (!def) return 0;
-          const target = Math.max(0, Math.min(1, value));
-          return setVolumeInternal(def, target);
-        },
-        async toggle(id) {
-          const def = findAmbianceSoundDefinition(id);
-          if (!def) return 0;
-          const mix = ensureState();
-          const current = mix[id]?.volume ?? 0;
-          const next = current > 0 ? 0 : (current || 0.5);
-          return this.setVolume(id, next);
-        },
-        isActive(id) {
-          const mix = ensureState();
-          return !!(mix[id] && mix[id].volume > 0);
-        }
-      };
-    })();
     const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
     function on(el, evt, handler){ if(!el){ console.warn('Missing element', evt); return; } el.addEventListener(evt, handler); }
     const formatMMSS = (s) => { const m = Math.floor(s/60).toString().padStart(2,'0'); const ss = Math.floor(s%60).toString().padStart(2,'0'); return `${m}:${ss}`; };
@@ -3795,8 +2225,6 @@
             ...s,
             durations: { ...defaults.settings.durations, ...(s.durations || {}) }
         };
-          if (!mergedSettings.ambianceMixer || typeof mergedSettings.ambianceMixer !== 'object') mergedSettings.ambianceMixer = {};
-          if (typeof mergedSettings.ambianceSelectedBackground !== 'string') mergedSettings.ambianceSelectedBackground = '';
         if (!Array.isArray(mergedSettings.achievedMilestones)) mergedSettings.achievedMilestones = [];
         if (typeof mergedSettings.useCustomSounds !== 'boolean') mergedSettings.useCustomSounds = false;
         obj.settings = mergedSettings;
@@ -3812,7 +2240,7 @@
                 st.methods = Array.isArray(st.methods) ? st.methods : [];
                 st.stats = st.stats || { totalMinutes: 0, sessionsCompleted: 0, tasksCompleted: 0 };
                 st.sessions = st.sessions || [];
-                st.timerState = st.timerState || { state: 'idle', prevState: null, remaining: 0, segmentTotal: 0, cycleIndex: 0, endAt: null, lastTick: null };
+                st.timerState = st.timerState || { state: 'idle', prevState: null, remaining: 0, segmentTotal: 0, cycleIndex: 0 };
             });
         });
     }
@@ -3925,11 +2353,8 @@
 
     const defaults = {
         version: 1,
-          settings: {
-              appMode: 'power',
-              ambianceSelectedBackground: '',
-              ambianceMixer: {},
-              apiKey: "",
+        settings: {
+            apiKey: "",
             currentView: 'timer',
             preset: 'A',
             autoStartNext: true,
@@ -4009,13 +2434,7 @@
       if(!data.settings.soundOn) return;
       const vol = Math.max(0, Math.min(1, data.settings.volume ?? 0.8));
       const useCustom = !!data.settings.useCustomSounds;
-      let ref = useCustom ? data.settings.customSounds?.[kind] : '';
-      if (!ref) {
-        const customDef = findAmbianceSoundDefinition(kind);
-        if (customDef && customDef.customSoundId) {
-          ref = customDef.customSoundId;
-        }
-      }
+      const ref = useCustom ? data.settings.customSounds?.[kind] : '';
       let audioEl;
       if (kind === 'work_end') audioEl = $('#audioWorkEnd'); else if (kind === 'break_end') audioEl = $('#audioBreakEnd'); else if (kind === 'long_end') audioEl = $('#audioLongEnd');
       if (ref && audioEl) {
@@ -4267,7 +2686,7 @@
             box.classList.add('menu-active');
           }
         });
-        bAdd.addEventListener('click', ()=> showInputModal('Tên Chủ đề con mới?', async (name) => { if(!name) return; const newSub = { id: uid('s'), topicId: topic.id, name, tasks: [], generalNotes: [], summaries: [], chatHistory: [], methods: [], stats:{ totalMinutes:0, sessionsCompleted:0, tasksCompleted: 0 }, sessions: [], timerState: { state: 'idle', prevState: null, remaining: 0, segmentTotal: 0, cycleIndex: 0, endAt: null, lastTick: null } }; topic.subtopics.push(newSub); await storageManager.add('subtopics', newSub); renderTopics(); }));
+        bAdd.addEventListener('click', ()=> showInputModal('Tên Chủ đề con mới?', async (name) => { if(!name) return; const newSub = { id: uid('s'), topicId: topic.id, name, tasks: [], generalNotes: [], summaries: [], chatHistory: [], methods: [], stats:{ totalMinutes:0, sessionsCompleted:0, tasksCompleted: 0 }, sessions: [], timerState: { state: 'idle', prevState: null, remaining: 0, segmentTotal: 0, cycleIndex: 0 } }; topic.subtopics.push(newSub); await storageManager.add('subtopics', newSub); renderTopics(); }));
         bEdit.addEventListener('click', ()=> showInputModal('Đổi tên Chủ đề', async (newName) => { if(!newName) return; topic.name=newName; await storageManager.update('topics', topic); renderTopics(); }, topic.name));
         bDel.addEventListener('click', ()=> showConfirmModal('Xác nhận xóa', `Bạn có chắc muốn xóa Chủ đề "${topic.name}"? Mọi chủ đề con và dữ liệu liên quan sẽ bị mất.`, async (ok) => { if(!ok) return; data.topics = data.topics.filter(t=>t.id!==topic.id); delete collapsedMap[topic.id]; if(data.settings.selectedTopicId===topic.id){ data.settings.selectedTopicId=''; data.settings.selectedSubtopicId=''; ensureValidSelection(); } await storageManager.delete('topics', topic.id); for(const sub of topic.subtopics){ await storageManager.delete('subtopics', sub.id); } renderAll(); }));
         // Prevent header toggle when clicking action buttons
@@ -4330,15 +2749,12 @@
         const mainEl = $('.app-content');
         const oldSubtopic = getCurrentSubtopic();
         if (oldSubtopic && timer.state !== 'idle') {
-            timer._syncRemainingWithClock();
             oldSubtopic.timerState = {
                 state: timer.state,
                 prevState: timer.prevState,
                 remaining: timer.remaining,
                 segmentTotal: timer.segmentTotal,
-                cycleIndex: timer.cycleIndex,
-                endAt: timer.endAt,
-                lastTick: timer.lastTick
+                cycleIndex: timer.cycleIndex
             };
         }
         mainEl.classList.add('reloading');
@@ -4352,9 +2768,6 @@
                 timer.remaining = newSubtopic.timerState.remaining;
                 timer.segmentTotal = newSubtopic.timerState.segmentTotal;
                 timer.cycleIndex = newSubtopic.timerState.cycleIndex;
-                timer.endAt = newSubtopic.timerState.endAt || null;
-                timer.lastTick = newSubtopic.timerState.lastTick || null;
-                timer._syncRemainingWithClock();
             } else {
                 timer.reset();
             }
@@ -4400,756 +2813,16 @@
             listEl.appendChild(item);
         });
     }
-    function renderAmbianceTasks() {
-      const list = document.getElementById('ambianceTasksList');
-      const input = document.getElementById('ambianceNewTaskInput');
-      const addBtn = document.getElementById('ambianceAddTaskBtn');
-      const stats = document.getElementById('ambianceTaskStats');
-      if (!list) return;
-      const s = getCurrentSubtopic();
-      if (!s) {
-        list.innerHTML = '<div class="ambiance-empty">Chọn một Chủ đề con trong Topics.</div>';
-        if (stats) {
-          stats.innerHTML = '<span><strong>0</strong> Open</span><span><strong>0</strong> Completed</span>';
-        }
-        if (input) input.disabled = true;
-        if (addBtn) addBtn.disabled = true;
-        return;
-      }
-      if (input) input.disabled = false;
-      if (addBtn) addBtn.disabled = false;
-      const tasks = Array.isArray(s.tasks) ? [...s.tasks] : [];
-      const openTasks = tasks.filter(t => !t.isCompleted);
-      const completedTasks = tasks.filter(t => t.isCompleted);
-      if (stats) {
-        stats.innerHTML = `<span><strong>${openTasks.length}</strong> Open</span><span><strong>${completedTasks.length}</strong> Completed</span>`;
-      }
-      if (!tasks.length) {
-        list.innerHTML = '<div class="ambiance-empty">Không có nhiệm vụ nào.</div>';
-        return;
-      }
-      list.innerHTML = '';
-      const ordered = [...openTasks, ...completedTasks];
-      ordered.forEach(task => {
-        const item = document.createElement('div');
-        item.className = 'item ambiance-task-item';
-        if (task.isCompleted) item.classList.add('completed');
-        item.dataset.taskItemId = task.id;
-        const checkboxAttrs = task.isCompleted ? 'checked disabled' : '';
-        item.innerHTML = `<label class="ambiance-task-label">
-            <input type="checkbox" data-task-complete-id="${task.id}" ${checkboxAttrs}>
-            <span class="task-text">${escapeHTML(task.text)}</span>
-          </label>
-          <div class="ambiance-item-actions hidden-by-default">
-            <button type="button" class="ambiance-chip icon-only edit-btn" data-ambiance-edit="${task.id}" aria-label="Sửa" title="Sửa">✏️</button>
-            <button type="button" class="ambiance-chip icon-only delete-btn" data-ambiance-delete="${task.id}" aria-label="Xóa" title="Xóa">🗑️</button>
-          </div>`;
-        list.appendChild(item);
-      });
-    }
-
-    async function createSubtopicTaskEntry(rawText) {
-      const s = getCurrentSubtopic();
-      if (!s) { toast(t('timer.selectSubtopicPrompt')); return false; }
-      const text = (rawText || '').trim();
-      if (!text) return false;
-      if (!Array.isArray(s.tasks)) s.tasks = [];
-      s.tasks.push({ id: uid('task'), text, isCompleted: false, createdAt: todayISO() });
-      await saveData();
-      renderSubtopicTasks();
-      renderAmbianceTasks();
-      return true;
-    }
-
-    async function addAmbianceTaskFromModal() {
-      const input = document.getElementById("ambianceNewTaskInput");
-      const value = input ? input.value : '';
-      const created = await createSubtopicTaskEntry(value);
-      if (created && input) {
-        input.value = '';
-        input.focus();
-      }
-    }
-
-    function editAmbianceTask(taskId) {
-      const s = getCurrentSubtopic();
-      if (!s || !Array.isArray(s.tasks)) return;
-      const task = s.tasks.find(t => t.id === taskId);
-      if (!task) return;
-      showInputModal('Sửa nhiệm vụ', async (newText) => {
-        const value = (newText || '').trim();
-        if (!value) return;
-        task.text = value;
-        await saveData();
-        renderSubtopicTasks();
-        renderAmbianceTasks();
-      }, task.text);
-    }
-
-    function deleteAmbianceTask(taskId) {
-      const s = getCurrentSubtopic();
-      if (!s || !Array.isArray(s.tasks)) return;
-      const task = s.tasks.find(t => t.id === taskId);
-      if (!task) return;
-      showConfirmModal('Xác nhận xóa', `Bạn có chắc muốn xóa nhiệm vụ "${task.text}"?`, async (ok) => {
-        if (!ok) return;
-        s.tasks = s.tasks.filter(t => t.id !== taskId);
-        await saveData();
-        renderSubtopicTasks();
-        renderAmbianceTasks();
-      });
-    }
-
-    async function completeAmbianceTask(taskId) {
-      if (!taskId) return;
-      const s = getCurrentSubtopic();
-      if (!s || !Array.isArray(s.tasks)) return;
-      const task = s.tasks.find(t => t.id === taskId);
-      if (!task || task.isCompleted) {
-        toast('Task đã hoàn thành.');
-        return;
-      }
-      task.isCompleted = true;
-      s.stats = s.stats || { totalMinutes: 0, sessionsCompleted: 0, tasksCompleted: 0 };
-      s.stats.tasksCompleted = (s.stats.tasksCompleted || 0) + 1;
-      await saveData();
-      renderSubtopicTasks();
-      renderAmbianceTasks();
-      renderStatsHistory();
-      toast('Đã hoàn thành nhiệm vụ.');
-    }
-
-    function renderAmbianceTopics() {
-      const list = document.getElementById("ambianceTopicsList");
-      if (!list) return;
-      const topics = Array.isArray(data.topics) ? data.topics : [];
-      if (!topics.length) {
-        list.innerHTML = '<div class="ambiance-empty">Chưa có Chủ đề.</div>';
-        return;
-      }
-      const selectedTopic = data.settings.selectedTopicId;
-      const selectedSubtopic = data.settings.selectedSubtopicId;
-      const currentStep = ambianceState.topicsStep || "topics";
-      const activeId = ambianceState.topicsActiveId || "";
-      list.innerHTML = "";
-
-      if (currentStep === "subtopics" && activeId) {
-        const topic = topics.find(t => t.id === activeId);
-        if (!topic) {
-          ambianceState.topicsStep = "topics";
-          ambianceState.topicsActiveId = "";
-          renderAmbianceTopics();
-          return;
-        }
-        const wrapper = document.createElement("div");
-        wrapper.className = "ambiance-subtopic-list";
-
-        const backBtn = document.createElement("button");
-        backBtn.type = "button";
-        backBtn.className = "ambiance-topics-back";
-        backBtn.dataset.ambianceTopicsBack = "1";
-        backBtn.textContent = "◀️ Quay lại Danh sách Chủ đề";
-        wrapper.appendChild(backBtn);
-
-        const detail = document.createElement("div");
-        detail.className = "ambiance-topic-detail";
-        const title = document.createElement("strong");
-        title.textContent = topic.name || "Chủ đề";
-        const meta = document.createElement("div");
-        meta.className = "ambiance-topic-meta";
-        const subCount = Array.isArray(topic.subtopics) ? topic.subtopics.length : 0;
-        meta.textContent = subCount > 0 ? `${subCount} chủ đề con` : "Chưa có chủ đề con";
-        detail.appendChild(title);
-        detail.appendChild(meta);
-        wrapper.appendChild(detail);
-
-        const chipsWrap = document.createElement("div");
-        chipsWrap.className = "ambiance-subtopic-chip-group";
-        if (subCount) {
-          topic.subtopics.forEach(sub => {
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "ambiance-chip";
-            btn.textContent = sub.name;
-            btn.dataset.ambianceSubtopic = sub.id;
-            btn.dataset.topicId = topic.id;
-            if (topic.id === selectedTopic && sub.id === selectedSubtopic) {
-              btn.classList.add("active");
-            }
-            chipsWrap.appendChild(btn);
-          });
-        } else {
-          const empty = document.createElement("div");
-          empty.className = "ambiance-empty";
-          empty.textContent = "Chưa có Chủ đề con.";
-          chipsWrap.appendChild(empty);
-        }
-        wrapper.appendChild(chipsWrap);
-        list.appendChild(wrapper);
-        return;
-      }
-
-      ambianceState.topicsStep = "topics";
-      ambianceState.topicsActiveId = "";
-      const flow = document.createElement("div");
-      flow.className = "ambiance-topic-list";
-      topics.forEach(topic => {
-        const row = document.createElement("button");
-        row.type = "button";
-        row.className = "ambiance-topic-row";
-        row.dataset.ambianceTopic = topic.id;
-        const subCount = Array.isArray(topic.subtopics) ? topic.subtopics.length : 0;
-        const metaText = subCount ? `${subCount} chủ đề con` : "Chưa có Chủ đề con";
-        row.innerHTML = `
-          <div class="ambiance-topic-detail">
-            <strong>${escapeHTML(topic.name || "Chủ đề")}</strong>
-            <div class="ambiance-topic-meta">${escapeHTML(metaText)}</div>
-          </div>
-          <span class="ambiance-topic-meta">▶️</span>
-        `;
-        flow.appendChild(row);
-      });
-      list.appendChild(flow);
-    }
-
-                        function renderAmbianceBackgrounds(category = ambianceState.backgroundCategory) {
-      const chips = document.getElementById("ambianceBgCategories");
-      const grid = document.getElementById("ambianceBgList");
-      if (!chips || !grid) return;
-      const uploads = ensureAmbianceUploads();
-      const coreOrder = ["all", "Động (Lofi)", "Động (Thiên nhiên)", "Tĩnh (Kiến trúc)", "Tĩnh (Tối giản)"];
-      const categories = coreOrder.slice();
-      if (uploads.length && !categories.includes("Tải lên")) {
-        categories.push("Tải lên");
-      }
-      if (!categories.includes(category)) {
-        category = 'all';
-      }
-      ambianceState.backgroundCategory = category;
-      chips.innerHTML = "";
-      categories.forEach(cat => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "ambiance-chip";
-        btn.textContent = cat === "all" ? "Tất cả" : cat;
-        btn.dataset.category = cat;
-        if (ambianceState.backgroundCategory === cat) btn.classList.add("active");
-        chips.appendChild(btn);
-      });
-      const selectedKey = data.settings.ambianceSelectedBackground || "";
-      const selectedCustom = data.settings.customBg || "";
-      const uploadEntries = uploads.map(item => {
-        const fileId = item.fileId || item.id;
-        return {
-          id: item.id,
-          label: item.label || "Ảnh tải lên",
-        category: "Tải lên",
-          type: "upload",
-          value: fileId,
-          preview: item.preview || "",
-          storageKey: `upload:${item.id}`,
-          persistValue: fileId
-        };
-      });
-      const allEntries = [...ambianceBackgrounds, ...uploadEntries];
-      const filtered = (category === 'all') ? allEntries : allEntries.filter(bg => bg.category === category);
-      grid.innerHTML = "";
-      if (!filtered.length) {
-        grid.innerHTML = '<div class="ambiance-empty">Không có hình nền trong danh mục này.</div>';
-        return;
-      }
-      filtered.forEach(entry => {
-        const card = document.createElement("button");
-        card.type = "button";
-        card.className = "ambiance-bg-card";
-        const storageKey = entry.storageKey || (entry.type === "upload" ? `upload:${entry.value}` : `builtin:${entry.id}`);
-        const persistValue = entry.persistValue || (entry.type === "video"
-          ? `video:${entry.value}`
-          : entry.type === "gradient"
-            ? `gradient:${entry.value}`
-            : entry.value);
-        card.dataset.bgId = entry.id;
-        card.dataset.bgKey = storageKey;
-        card.dataset.bgType = entry.type;
-        card.dataset.bgValue = entry.value;
-        card.dataset.bgPersist = persistValue;
-        card.dataset.bgLabel = entry.label;
-        card.dataset.bgCategory = entry.category;
-        if (entry.preview) {
-          card.dataset.bgPreview = entry.preview;
-        }
-        const badge = entry.type === "video" ? "Video" : entry.type === "gradient" ? "Gradient" : entry.type === "upload" ? "Upload" : "?nh";
-        card.dataset.badge = badge;
-        const isSelected = storageKey === selectedKey || selectedKey === entry.id || persistValue === selectedCustom;
-        if (isSelected) card.classList.add("active");
-        if (entry.type === "gradient") {
-          card.style.backgroundImage = entry.value;
-        } else if (entry.type === "image") {
-          const preview = entry.preview || entry.value;
-          card.style.backgroundImage = `url(${preview})`;
-        } else if (entry.type === "video") {
-          if (entry.preview) {
-            card.style.backgroundImage = entry.preview.startsWith('linear-gradient') ? entry.preview : `url(${entry.preview})`;
-          } else {
-            card.style.backgroundImage = "linear-gradient(135deg, #111827 0%, #1f2937 50%, #4338ca 100%)";
-          }
-        } else if (entry.type === "upload") {
-          card.style.backgroundImage = "linear-gradient(135deg, rgba(15,23,42,0.8), rgba(30,58,138,0.65))";
-          getStoredFileUrl(entry.value).then(url => {
-            if (!url) return;
-            card.style.backgroundImage = `url(${url})`;
-            card.dataset.bgAsset = url;
-            card.dataset.bgPreview = url;
-            const uploadsList = ensureAmbianceUploads();
-            const record = uploadsList.find(item => item.id === entry.id);
-            if (record) {
-              let changed = false;
-              if (record.preview !== url) {
-                record.preview = url;
-                changed = true;
-              }
-              if (!record.fileId) {
-                record.fileId = entry.value;
-                changed = true;
-              }
-              if (changed) saveData().catch(() => {});
-            }
-          });
-        }
-        card.innerHTML = `<span>${escapeHTML(entry.label)}</span>`;
-        grid.appendChild(card);
-      });
-    }
-
-
-
-
-
-
-                function applyAmbianceBackground(entry) {
-      if (!entry) return;
-      const persistValue = entry.persistValue || entry.value;
-      data.settings.customBg = persistValue;
-      data.settings.ambianceSelectedBackground = entry.storageKey || entry.id;
-      if (entry.type === 'upload') {
-        const uploads = ensureAmbianceUploads();
-        let record = uploads.find(item => item.id === entry.id);
-        if (!record) {
-          record = { id: entry.id, fileId: entry.value, label: entry.label || "Ảnh tải lên" };
-          uploads.push(record);
-        } else {
-          record.fileId = entry.value;
-          if (entry.label && record.label !== entry.label) {
-            record.label = entry.label;
-          }
-        }
-        if (entry.preview && record.preview !== entry.preview) {
-          record.preview = entry.preview;
-        }
-      }
-      applyCustomBg();
-      saveData().catch(() => {});
-      renderAmbianceBackgrounds(ambianceState.backgroundCategory);
-      toast('Đã cập nhật hình nền.');
-    }
-
-
-
-
-    function renderAmbianceSounds(category = ambianceState.soundCategory) {
-      const chipWrap = document.getElementById("ambianceSoundCategories");
-      const list = document.getElementById("ambianceSoundList");
-      if (!chipWrap || !list) return;
-      const definitions = getAmbianceSoundDefinitions();
-      const categories = ['all', ...Array.from(new Set(definitions.map(def => def.category)))];
-      if (!categories.includes(category)) {
-        category = 'all';
-      }
-      ambianceState.soundCategory = category;
-      chipWrap.innerHTML = "";
-      categories.forEach(cat => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "ambiance-chip";
-        btn.textContent = cat === "all" ? "Tất cả" : cat;
-        btn.dataset.soundCategory = cat;
-        if (ambianceState.soundCategory === cat) btn.classList.add("active");
-        chipWrap.appendChild(btn);
-      });
-      const filtered = category === 'all'
-        ? definitions
-        : definitions.filter(x => x.category === category);
-      list.innerHTML = "";
-      if (!filtered.length) {
-        list.innerHTML = '<div class="ambiance-empty">Không có âm thanh nào trong danh mục này.</div>';
-        return;
-      }
-      filtered.forEach(def => {
-        const volume = ambianceSoundEngine.getVolume(def.id);
-        const percent = Math.round(volume * 100);
-        const enabled = volume > 0;
-        const row = document.createElement("div");
-        row.className = "item ambiance-sound-item";
-        row.innerHTML = `
-          <button type="button" class="ambiance-sound-toggle ${enabled ? "active" : ""}" data-sound-toggle="${def.id}" data-sound-label="${escapeHTML(def.label)}" aria-label="${enabled ? "Tạm dừng" : "Phát"} ${escapeHTML(def.label)}">${enabled ? "⏸" : "▶️"}</button>
-          <div class="ambiance-sound-meta">
-            <strong>${escapeHTML(def.label)}</strong>
-            <div class="tiny">${escapeHTML(def.category)}</div>
-          </div>
-          <input type="range" class="ambiance-slider" min="0" max="100" value="${percent}" data-sound-slider="${def.id}">
-        `;
-        list.appendChild(row);
-      });
-    }
-
-
-
-
-    function openAmbianceModal(id, onOpen) {
-      const modal = document.getElementById(id);
-      if (!modal) return;
-      closeAmbianceModals();
-      modal.classList.remove("hidden");
-      if (typeof onOpen === "function") onOpen();
-    }
-
-    function closeAmbianceModals() {
-      document.querySelectorAll("[data-ambiance-modal]").forEach(modal => modal.classList.add("hidden"));
-    }
-
-    function toggleAmbianceZen(force) {
-      if (!wrapper) return;
-      const active = typeof force === "boolean" ? force : !wrapper.classList.contains("zen-active");
-      wrapper.classList.toggle("zen-active", active);
-      if (!active) wrapper.classList.remove("zen-show");
-      ambianceState.zenActive = active;
-    }
-
-            function initAmbianceUI() {
-      if (window.__ambianceInitialized) return;
-      window.__ambianceInitialized = true;
-      const tasksList = document.getElementById("ambianceTasksList");
-      if (tasksList) {
-        tasksList.addEventListener("change", e => {
-          const checkbox = e.target.closest("[data-task-complete-id]");
-          if (checkbox && checkbox.checked) {
-            completeAmbianceTask(checkbox.dataset.taskCompleteId);
-          }
-        });
-        tasksList.addEventListener("click", e => {
-          const editBtn = e.target.closest("[data-ambiance-edit]");
-          if (editBtn) {
-            editAmbianceTask(editBtn.dataset.ambianceEdit);
-            return;
-          }
-          const deleteBtn = e.target.closest("[data-ambiance-delete]");
-          if (deleteBtn) {
-            deleteAmbianceTask(deleteBtn.dataset.ambianceDelete);
-          }
-        });
-      }
-      const ambianceAddTaskBtn = document.getElementById("ambianceAddTaskBtn");
-      if (ambianceAddTaskBtn) ambianceAddTaskBtn.addEventListener("click", addAmbianceTaskFromModal);
-      const ambianceTaskInput = document.getElementById("ambianceNewTaskInput");
-      if (ambianceTaskInput) {
-        ambianceTaskInput.addEventListener("keydown", e => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            addAmbianceTaskFromModal();
-          }
-        });
-      }
-      const topicsList = document.getElementById("ambianceTopicsList");
-      if (topicsList) {
-        topicsList.addEventListener("click", e => {
-          const backBtn = e.target.closest("[data-ambiance-topics-back]");
-          if (backBtn) {
-            ambianceState.topicsStep = "topics";
-            ambianceState.topicsActiveId = "";
-            renderAmbianceTopics();
-            return;
-          }
-          const topicBtn = e.target.closest("[data-ambiance-topic]");
-          if (topicBtn) {
-            ambianceState.topicsStep = "subtopics";
-            ambianceState.topicsActiveId = topicBtn.dataset.ambianceTopic;
-            renderAmbianceTopics();
-            return;
-          }
-          const subBtn = e.target.closest("[data-ambiance-subtopic]");
-          if (subBtn) {
-            const topicId = subBtn.dataset.topicId;
-            const subId = subBtn.dataset.ambianceSubtopic;
-            closeAmbianceModals();
-            selectSubtopic(topicId, subId);
-          }
-        });
-      }
-      const backgroundGrid = document.getElementById("ambianceBgList");
-      if (backgroundGrid) {
-        backgroundGrid.addEventListener("click", e => {
-          const card = e.target.closest(".ambiance-bg-card");
-          if (!card) return;
-          const entry = {
-            id: card.dataset.bgId,
-            label: card.dataset.bgLabel,
-            type: card.dataset.bgType,
-            value: card.dataset.bgValue,
-            persistValue: card.dataset.bgPersist,
-            storageKey: card.dataset.bgKey,
-            category: card.dataset.bgCategory,
-            preview: card.dataset.bgPreview || card.dataset.bgAsset || ""
-          };
-          applyAmbianceBackground(entry);
-        });
-      }
-      const backgroundChips = document.getElementById("ambianceBgCategories");
-      if (backgroundChips) {
-        backgroundChips.addEventListener("click", e => {
-          const btn = e.target.closest("[data-category]");
-          if (!btn) return;
-          renderAmbianceBackgrounds(btn.dataset.category);
-        });
-      }
-      const backgroundUpload = document.getElementById("ambianceBgUpload");
-      if (backgroundUpload) {
-        backgroundUpload.addEventListener("change", e => {
-          const file = e.target.files && e.target.files[0];
-          if (!file) return;
-          handleFileUpload(file, async (fileId) => {
-            const uploads = ensureAmbianceUploads();
-            const label = (file.name || "Tải lên").replace(/\.[^/.]+$/, "");
-            const entryId = fileId;
-            let entry = uploads.find(item => item.id === entryId);
-            if (entry) {
-              entry.fileId = fileId;
-              entry.label = label;
-              entry.updatedAt = Date.now();
-            } else {
-              entry = { id: entryId, fileId, label, createdAt: Date.now() };
-              uploads.push(entry);
-            }
-            data.settings.customBg = fileId;
-            data.settings.ambianceSelectedBackground = `upload:${entryId}`;
-            ambianceState.backgroundCategory = "Tải lên";
-            await saveData();
-            applyCustomBg();
-            renderAmbianceBackgrounds("Tải lên");
-            toast("Đã thêm hình nền mới.");
-            getStoredFileUrl(fileId).then(url => {
-              if (!url) return;
-              if (entry.preview !== url) {
-                entry.preview = url;
-                saveData().catch(() => {});
-              }
-            });
-          });
-          e.target.value = "";
-        });
-      }
-      const soundUpload = document.getElementById("ambianceSoundUpload");
-      if (soundUpload) {
-        soundUpload.addEventListener("change", e => {
-          const file = e.target.files && e.target.files[0];
-          if (!file) return;
-          handleFileUpload(file, async (fileId) => {
-            const sounds = ensureAmbianceCustomSounds();
-            const label = (file.name || 'Âm thanh mới').replace(/\.[^/.]+$/, '');
-            const entryId = `custom_sound_${fileId}`;
-            const existing = sounds.find(item => item.id === entryId);
-            if (existing) {
-              existing.fileId = fileId;
-              existing.label = label;
-              existing.updatedAt = Date.now();
-            } else {
-              sounds.push({ id: entryId, fileId, label, createdAt: Date.now() });
-            }
-            await saveData();
-            ambianceState.soundCategory = 'Tùy chỉnh';
-            renderAmbianceSounds('Tùy chỉnh');
-            toast('Đã thêm âm thanh mới.');
-          });
-          e.target.value = '';
-        });
-      }
-      const soundCategoryWrap = document.getElementById("ambianceSoundCategories");
-      if (soundCategoryWrap) {
-        soundCategoryWrap.addEventListener("click", e => {
-          const btn = e.target.closest("[data-sound-category]");
-          if (!btn) return;
-          renderAmbianceSounds(btn.dataset.soundCategory);
-        });
-      }
-      const soundList = document.getElementById("ambianceSoundList");
-      if (soundList) {
-        soundList.addEventListener("input", e => {
-          const slider = e.target.closest("[data-sound-slider]");
-          if (!slider) return;
-          const id = slider.dataset.soundSlider;
-          const vol = parseInt(slider.value, 10) / 100;
-          ambianceSoundEngine.setVolume(id, vol);
-          const toggleBtn = soundList.querySelector(`[data-sound-toggle="${id}"]`);
-          if (toggleBtn) {
-            const isActive = vol > 0;
-            toggleBtn.classList.toggle("active", isActive);
-            toggleBtn.textContent = isActive ? "⏸" : "▶️";
-            const label = toggleBtn.dataset.soundLabel || "";
-            toggleBtn.setAttribute("aria-label", `${isActive ? "Tạm dừng" : "Phát"} ${label}`);
-          }
-        });
-        soundList.addEventListener("change", e => {
-          const slider = e.target.closest("[data-sound-slider]");
-          if (!slider) return;
-          const id = slider.dataset.soundSlider;
-          const vol = parseInt(slider.value, 10) / 100;
-          ambianceSoundEngine.setVolume(id, vol);
-        });
-        soundList.addEventListener("click", e => {
-          const btn = e.target.closest("[data-sound-toggle]");
-          if (!btn) return;
-          const id = btn.dataset.soundToggle;
-          ambianceSoundEngine.toggle(id).then(volume => {
-            const isActive = volume > 0;
-            btn.classList.toggle("active", isActive);
-            btn.textContent = isActive ? "⏸" : "▶️";
-            const label = btn.dataset.soundLabel || "";
-            btn.setAttribute("aria-label", `${isActive ? "Tạm dừng" : "Phát"} ${label}`);
-            const slider = soundList.querySelector(`[data-sound-slider="${id}"]`);
-            if (slider) slider.value = Math.round(volume * 100);
-          });
-        });
-      }
-      document.querySelectorAll("[data-ambiance-modal]").forEach(modal => {
-        modal.addEventListener("click", e => {
-          if (e.target === modal) closeAmbianceModals();
-        });
-        const closeBtn = modal.querySelector("[data-ambiance-close]");
-        if (closeBtn) closeBtn.addEventListener("click", closeAmbianceModals);
-      });
-      const btnZen = document.getElementById("ambianceBtnZen");
-      if (btnZen) btnZen.addEventListener("click", () => toggleAmbianceZen());
-      const wrapper = document.getElementById("ambiance-mode-wrapper");
-      const quickToggle = document.getElementById("ambianceModeToggle");
-      if (quickToggle) {
-        quickToggle.addEventListener("change", () => {
-          const targetMode = quickToggle.checked ? "ambiance" : "power";
-          switchAppMode(targetMode, { reload: true });
-        });
-      }
-      const quickSettingsBtn = document.getElementById("ambianceOpenFullSettings");
-      if (quickSettingsBtn) {
-        quickSettingsBtn.addEventListener("click", () => {
-          switchAppMode("power", { reload: true });
-        });
-      }
-      const btnTasks = document.getElementById("ambianceBtnTasks");
-      if (btnTasks) btnTasks.addEventListener("click", () => openAmbianceModal("ambiance-modal-tasks", renderAmbianceTasks));
-      const btnTopics = document.getElementById("ambianceBtnTopics");
-      if (btnTopics) btnTopics.addEventListener("click", () => openAmbianceModal("ambiance-modal-topics", () => {
-        ambianceState.topicsStep = "topics";
-        ambianceState.topicsActiveId = "";
-        renderAmbianceTopics();
-      }));
-      const btnSounds = document.getElementById("ambianceBtnSounds");
-      if (btnSounds) btnSounds.addEventListener("click", () => openAmbianceModal("ambiance-modal-sounds", () => renderAmbianceSounds(ambianceState.soundCategory)));
-      const btnBackgrounds = document.getElementById("ambianceBtnBackgrounds");
-      if (btnBackgrounds) btnBackgrounds.addEventListener("click", () => openAmbianceModal("ambiance-modal-backgrounds", () => renderAmbianceBackgrounds(ambianceState.backgroundCategory)));
-      const btnSettings = document.getElementById("ambianceBtnSettings");
-      if (btnSettings) btnSettings.addEventListener("click", () => openAmbianceModal("ambiance-modal-settings", () => {
-        const toggle = document.getElementById("ambianceModeToggle");
-        if (toggle) toggle.checked = data.settings.appMode === "ambiance";
-        const pipToggle = document.getElementById("ambianceTogglePiP");
-        if (pipToggle) pipToggle.textContent = pipManager.isActive() ? "Tắt PiP" : "Bật PiP";
-      }));
-      const btnFullscreen = document.getElementById("ambianceBtnFullscreen");
-      if (btnFullscreen) btnFullscreen.addEventListener("click", toggleFullScreen);
-      const pipToggle = document.getElementById("ambianceTogglePiP");
-      if (pipToggle) {
-        const syncPiPLabel = () => {
-          pipToggle.textContent = pipManager.isActive() ? "Tắt PiP" : "Bật PiP";
-        };
-        syncPiPLabel();
-        pipToggle.addEventListener("click", async () => {
-          await pipManager.toggle();
-          syncPiPLabel();
-        });
-        document.addEventListener("enterpictureinpicture", syncPiPLabel);
-        document.addEventListener("leavepictureinpicture", syncPiPLabel);
-      }
-      const startBtn = document.getElementById("ambiance-start");
-      if (startBtn) startBtn.addEventListener("click", () => timer.start());
-      const pauseBtn = document.getElementById("ambiance-pause");
-      if (pauseBtn) pauseBtn.addEventListener("click", () => timer.pause());
-      const skipBtn = document.getElementById("ambiance-skip");
-      if (skipBtn) skipBtn.addEventListener("click", () => timer.skip());
-      updateFullscreenButton();
-      setupModeSelectionModal(false);
-    }
-
-
-
-    function syncModeWrappers(mode) {
-      const powerWrapper = document.getElementById("power-mode-wrapper");
-      const ambianceWrapper = document.getElementById("ambiance-mode-wrapper");
-      if (powerWrapper) powerWrapper.classList.toggle("hidden", mode !== "power");
-      if (ambianceWrapper) ambianceWrapper.classList.toggle("hidden", mode !== "ambiance");
-      const toggle = document.getElementById("ambianceModeToggle");
-      if (toggle) toggle.checked = mode === "ambiance";
-    }
-
-    function setupModeSelectionModal(show) {
-      const modal = document.getElementById("modeSelectionModal");
-      if (!modal) return;
-      if (!modal.dataset.bound) {
-        modal.querySelectorAll("[data-mode-choice]").forEach(btn => {
-          btn.addEventListener("click", async () => {
-            const choice = btn.dataset.modeChoice || "power";
-            await switchAppMode(choice, { reload: false });
-            modal.classList.remove("show");
-            modal.classList.add("hidden");
-            renderAll();
-            timer.updateUI();
-          });
-        });
-        modal.dataset.bound = "true";
-      }
-      if (show) {
-        modal.classList.remove("hidden");
-        modal.classList.add("show");
-      } else {
-        modal.classList.remove("show");
-        modal.classList.add("hidden");
-      }
-    }
-
-    async function switchAppMode(mode, { reload = true } = {}) {
-      if (!data || !data.settings) return;
-      if (data.settings.appMode === mode) {
-        syncModeWrappers(mode);
-        if (!reload) {
-          renderAll();
-          timer.updateUI();
-        }
-        return;
-      }
-      data.settings.appMode = mode;
-      await saveData();
-      syncModeWrappers(mode);
-      if (reload) {
-        window.location.reload();
-      } else {
-        renderAll();
-        timer.updateUI();
-      }
-    }
     async function addSubtopicTask() {
-        const input = $('#newSubtopicTaskInput') || $('#ambianceNewTaskInput');
-        if (!input) {
-            await createSubtopicTaskEntry('');
-            return;
-        }
-        const created = await createSubtopicTaskEntry(input.value);
-        if (created) {
+        const s = getCurrentSubtopic();
+        if (!s) { toast(t('timer.selectSubtopicPrompt')); return; }
+        const input = $('#newSubtopicTaskInput');
+        const text = input.value.trim();
+        if (text) {
+            if (!s.tasks) s.tasks = [];
+            s.tasks.push({ id: uid('task'), text, isCompleted: false, createdAt: todayISO() });
+            await saveData();
+            renderSubtopicTasks();
             input.value = '';
         }
         input.focus();
@@ -5170,7 +2843,7 @@
         }
     }
     const timer = {
-      state:'idle', prevState:null, tickHandle:null, endAt:null, lastTick:null,
+      state:'idle', prevState:null, tickHandle:null, endAt:null,
       remaining:0, segmentTotal:0, cyclesTarget:4, cycleIndex:0, mode:'A',
       persistInterval: 60*1000,
       lastPersist: 0,
@@ -5192,206 +2865,61 @@
       },
       currentConfig(){ const s=data.settings; if(this.mode==='A') return {cycles:s.cyclesA, interval:s.longBreakIntervalA}; if(this.mode==='B') return {cycles:s.cyclesB, interval:s.longBreakIntervalB}; return {cycles:0, interval:0}; },
       updateUI() {
-        const mode = (data && data.settings && data.settings.appMode) ? data.settings.appMode : "power";
-        const timeStr = formatMMSS(this.remaining);
-        let pipBackground = "#0b0e1a";
+        const badge = $('#stateBadge');
+        const progressCircle = $('.timer-circle-progress');
+        const container = $('.timer-circle-container');
+        if (!badge || !progressCircle || !container) return;
+        const isFlowMode = (this.mode === 'C');
+        $('#btnStart').classList.toggle('hidden', this.state !== 'idle' || (isFlowMode && this.state === 'work'));
+        $('#btnFinishFlow').classList.toggle('hidden', !(isFlowMode && this.state === 'work'));
+        $('#btnPause').classList.toggle('hidden', !['work', 'break', 'long_break'].includes(this.state));
+        $('#btnResume').classList.toggle('hidden', this.state !== 'paused');
+        let currentColor = 'var(--muted)';
+        if (this.state === 'work') { badge.textContent = isFlowMode ? 'LÀM VIỆC (FLOW)' : 'LÀM VIỆC'; badge.className = 'badge state work'; currentColor = 'var(--acc)'; }
+        else if (this.state === 'break') { badge.textContent = 'NGHỈ NGẮN'; badge.className = 'badge state break'; currentColor = 'var(--warn)'; }
+        else if (this.state === 'long_break') { badge.textContent = 'NGHỈ DÀI'; badge.className = 'badge state long'; currentColor = 'var(--danger)'; }
+        else if (this.state === 'wind_down') { badge.textContent = 'HẠ NHIỆT'; badge.className = 'badge state work'; currentColor = 'var(--acc-2)'; try { $('#windDownChecklist').classList.remove('hidden'); $('#btnBreakEarly').classList.remove('hidden'); } catch(_){} }
+        else if (this.state === 'paused') { badge.textContent = 'TẠM DỪNG'; badge.className = 'badge'; }
+        else { badge.textContent = 'SẴN SÀNG'; badge.className = 'badge'; }
         try {
-          const settings = (typeof data !== "undefined" && data && data.settings) ? data.settings : null;
-          const bgSetting = settings && typeof settings.customBg === "string" ? settings.customBg : "";
-          if (bgSetting) {
-            if (bgSetting.startsWith('gradient:')) {
-              pipBackground = bgSetting.replace('gradient:', '');
-            } else if (bgSetting.startsWith('linear-gradient') || bgSetting.startsWith('radial-gradient')) {
-              pipBackground = bgSetting;
-            } else if (bgSetting.startsWith('video:')) {
-              pipBackground = '#0b0e1a';
-            } else if (bgSetting.startsWith('url(')) {
-              pipBackground = bgSetting;
-            } else if (bgSetting.startsWith('http') || bgSetting.startsWith('data:') || bgSetting.startsWith('blob:')) {
-              const lower = bgSetting.toLowerCase();
-              if (!lower.includes('.mp4') && !lower.includes('.webm')) {
-                pipBackground = `url(${bgSetting})`;
-              }
-            }
-          } else {
-            const bodyStyle = getComputedStyle(document.body);
-            const themeBg = bodyStyle.getPropertyValue('--bg-image').trim();
-            if (themeBg && themeBg !== 'none') {
-              pipBackground = themeBg;
-            }
-          }
-        } catch (err) {
-          console.warn('Error getting background for PiP:', err);
-        }
-        const stateTitles = {
-          work: this.mode === "C" ? "FLOW SESSION" : "FOCUS SESSION",
-          break: "SHORT BREAK",
-          long_break: "LONG BREAK",
-          wind_down: "WIND DOWN",
-          paused: "PAUSED",
-          idle: "READY"
-        };
-        if (mode === "power") {
-          const badge = $("#stateBadge");
-          const progressCircle = $(".timer-circle-progress");
-          const container = $(".timer-circle-container");
-          if (!badge || !progressCircle || !container) {
-            const draggableTimer = $("#draggableTimer"); if (draggableTimer) draggableTimer.textContent = timeStr;
-            pipManager.update(timeStr, this.state, pipBackground);
-            return;
-          }
-          const isFlowMode = (this.mode === "C");
-          $("#btnStart").classList.toggle("hidden", this.state !== "idle" || (isFlowMode && this.state === "work"));
-          $("#btnFinishFlow").classList.toggle("hidden", !(isFlowMode && this.state === "work"));
-          $("#btnPause").classList.toggle("hidden", !["work", "break", "long_break", "wind_down"].includes(this.state));
-          $("#btnResume").classList.toggle("hidden", this.state !== "paused");
-          let currentColor = "var(--muted)";
-          if (this.state === "work") { badge.textContent = isFlowMode ? "FLOW SESSION" : "FOCUS SESSION"; badge.className = "badge state work"; currentColor = "var(--acc)"; }
-          else if (this.state === "break") { badge.textContent = "SHORT BREAK"; badge.className = "badge state break"; currentColor = "var(--warn)"; }
-          else if (this.state === "long_break") { badge.textContent = "LONG BREAK"; badge.className = "badge state long"; currentColor = "var(--danger)"; }
-          else if (this.state === "wind_down") { badge.textContent = "WIND DOWN"; badge.className = "badge state work"; currentColor = "var(--acc-2)"; try { $("#windDownChecklist").classList.remove("hidden"); $("#btnBreakEarly").classList.remove("hidden"); } catch(_){} }
-          else if (this.state === "paused") { badge.textContent = "PAUSED"; badge.className = "badge"; }
-          else { badge.textContent = "READY"; badge.className = "badge"; }
-          try {
-            if (this.state === "work") badge.textContent = isFlowMode ? t("stateBadgeFocusFlow") : t("stateBadgeFocus");
-            else if (this.state === "break") badge.textContent = t("stateBadgeShortBreak");
-            else if (this.state === "long_break") badge.textContent = t("stateBadgeLongBreak");
-            else if (this.state === "wind_down") badge.textContent = t("stateBadgeWindDown");
-            else if (this.state === "paused") badge.textContent = t("stateBadgePaused");
-            else badge.textContent = t("stateBadgeReady");
-          } catch(_) {}
-          if (["work","break","long_break","wind_down"].includes(this.state)) { container.classList.add("breathing"); } else { container.classList.remove("breathing"); }
-          progressCircle.style.stroke = currentColor; container.classList.remove("finished");
-          const timeEl = $("#timeDisplay"); if (timeEl) timeEl.textContent = timeStr;
-          const radius = progressCircle.r.baseVal.value;
-          const circumference = 2 * Math.PI * radius;
-          const offset = (this.segmentTotal>0) ? (circumference - (this.remaining / this.segmentTotal) * circumference) : circumference;
-          progressCircle.style.strokeDasharray = circumference;
-          progressCircle.style.strokeDashoffset = isNaN(offset) ? circumference : offset;
-          const cyc = $("#cycleInfo"); if (cyc) { const cfg=this.currentConfig(); cyc.textContent = t("timer.cycleInfo", { current: this.cycleIndex, target: cfg.cycles }); cyc.classList.toggle("hidden", isFlowMode); }
-          const bs = $("#breakSuggestionDisplay"); if (bs) { bs.classList.toggle("hidden", isFlowMode && this.state === "work"); }
-          if (this.state !== "wind_down") {
-            try { $("#windDownChecklist").classList.add("hidden"); $("#btnBreakEarly").classList.add("hidden"); } catch(_){}
-          }
-        } else {
-          const statusEl = $("#ambiance-status");
-          const cycleEl = $("#ambiance-cycle");
-          const ambianceClock = $("#ambiance-clock"); if (ambianceClock) ambianceClock.textContent = timeStr;
-          if (statusEl) {
-            const label = stateTitles[this.state] || stateTitles.idle;
-            statusEl.textContent = label;
-          }
-          if (cycleEl) {
-            const cfg = this.currentConfig();
-            cycleEl.textContent = `Chu kỳ ${this.cycleIndex} / ${cfg.cycles}`;
-          }
-          const isFlowMode = (this.mode === "C");
-          const startBtn = $("#ambiance-start");
-          if (startBtn) {
-            const canStart = this.state === "idle" || this.state === "paused";
-            const hideStart = !canStart || (isFlowMode && this.state !== "paused" && this.state !== "idle");
-            startBtn.classList.toggle("hidden", hideStart);
-            startBtn.textContent = this.state === "paused" ? "Tiếp tục" : "Bắt đầu";
-          }
-          const pauseBtn = $("#ambiance-pause");
-          if (pauseBtn) {
-            const showPause = ["work", "break", "long_break", "wind_down"].includes(this.state);
-            pauseBtn.classList.toggle("hidden", !showPause);
-          }
-          const skipBtn = $("#ambiance-skip");
-          if (skipBtn) {
-            const showSkip = ["work", "break", "long_break", "wind_down", "paused"].includes(this.state);
-            skipBtn.classList.toggle("hidden", !showSkip);
-          }
-        }
-        const draggableTimer = $("#draggableTimer"); if (draggableTimer) draggableTimer.textContent = timeStr;
-        pipManager.update(timeStr, this.state, pipBackground);
-      },
-      _syncRemainingWithClock(){
-        const now = Date.now();
-        if (this.mode === 'C' && this.state === 'work') {
-          if (this.lastTick) {
-            const delta = Math.floor((now - this.lastTick) / 1000);
-            if (delta > 0) {
-              this.remaining += delta;
-              this.lastTick += delta * 1000;
-            } else if (now < this.lastTick) {
-              this.lastTick = now;
-            }
-          }
-          return;
-        }
-        if (!this.endAt || !['work', 'break', 'long_break', 'wind_down'].includes(this.state)) return;
-        const newRemaining = Math.max(0, Math.ceil((this.endAt - now) / 1000));
-        if (newRemaining !== this.remaining) {
-          this.remaining = newRemaining;
+          if (this.state === 'work') badge.textContent = isFlowMode ? t('stateBadgeFocusFlow') : t('stateBadgeFocus');
+          else if (this.state === 'break') badge.textContent = t('stateBadgeShortBreak');
+          else if (this.state === 'long_break') badge.textContent = t('stateBadgeLongBreak');
+          else if (this.state === 'wind_down') badge.textContent = t('stateBadgeWindDown');
+          else if (this.state === 'paused') badge.textContent = t('stateBadgePaused');
+          else badge.textContent = t('stateBadgeReady');
+        } catch(_) {}
+        if (['work','break','long_break','wind_down'].includes(this.state)) { container.classList.add('breathing'); } else { container.classList.remove('breathing'); }
+        progressCircle.style.stroke = currentColor; container.classList.remove('finished');
+        const timeEl = $('#timeDisplay'); if (timeEl) timeEl.textContent = formatMMSS(this.remaining);
+        const radius = progressCircle.r.baseVal.value; const circumference = 2 * Math.PI * radius;
+        const offset = (this.segmentTotal>0) ? (circumference - (this.remaining / this.segmentTotal) * circumference) : circumference;
+        progressCircle.style.strokeDasharray = circumference;
+        progressCircle.style.strokeDashoffset = isNaN(offset) ? circumference : offset;
+        const cyc = $('#cycleInfo'); if (cyc) { const cfg=this.currentConfig(); cyc.textContent = t('timer.cycleInfo', { current: this.cycleIndex, target: cfg.cycles }); cyc.classList.toggle('hidden', isFlowMode); }
+        const bs = $('#breakSuggestionDisplay'); if (bs) { bs.classList.toggle('hidden', isFlowMode && this.state === 'work'); }
+        const draggableTimer = $('#draggableTimer'); if (draggableTimer) draggableTimer.textContent = formatMMSS(this.remaining);
+        if (this.state !== 'wind_down') {
+          try { $('#windDownChecklist').classList.add('hidden'); $('#btnBreakEarly').classList.add('hidden'); } catch(_){}
         }
       },
       persistTimerState(force=false){
         try{
           const s = getCurrentSubtopic(); if(!s) return;
-          const state = {
-            state:this.state,
-            prevState:this.prevState,
-            remaining:this.remaining,
-            segmentTotal:this.segmentTotal,
-            cycleIndex:this.cycleIndex,
-            endAt:(this.endAt && ['work','break','long_break','wind_down'].includes(this.state)) ? this.endAt : null,
-            lastTick:(this.mode==='C' && this.state==='work') ? this.lastTick : null
-          };
+          const state = { state:this.state, prevState:this.prevState, remaining:this.remaining, segmentTotal:this.segmentTotal, cycleIndex:this.cycleIndex };
           s.timerState = state; try{ localStorage.setItem('timerState_'+s.id, JSON.stringify(state)); }catch(_){ }
           this.lastPersist = Date.now();
         }catch(_){ }
       },
       _startTick(){
         if(this.tickHandle) clearInterval(this.tickHandle);
-        const now = Date.now();
         if (this.mode === 'C' && this.state === 'work') {
-          this.endAt = null;
-          this.lastTick = now;
-          this.tickHandle = setInterval(()=>{
-            const current = Date.now();
-            const delta = Math.floor((current - this.lastTick) / 1000);
-            if (delta > 0) {
-              this.remaining += delta;
-              this.lastTick += delta * 1000;
-              this.updateUI();
-              this.persistTimerState();
-            } else if (current < this.lastTick) {
-              this.lastTick = current;
-            }
-          }, 1000);
+          this.tickHandle = setInterval(()=>{ this.remaining += 1; this.updateUI(); this.persistTimerState(); }, 1000);
           return;
         }
-        if (this.remaining > 0 && ['work','break','long_break','wind_down'].includes(this.state)) {
-          this.endAt = now + (this.remaining * 1000);
-        } else {
-          this.endAt = null;
-        }
-        this.lastTick = null;
-        this.tickHandle = setInterval(()=>{
-          if (!this.endAt) {
-            clearInterval(this.tickHandle); this.tickHandle=null;
-            if (['work','break','long_break','wind_down'].includes(this.state) && this.remaining <= 0) {
-              this._onFinishSegment();
-            }
-            return;
-          }
-          const newRemaining = Math.max(0, Math.ceil((this.endAt - Date.now()) / 1000));
-          if (newRemaining !== this.remaining) {
-            this.remaining = newRemaining;
-          }
-          this.updateUI();
-          this.persistTimerState();
-          if (newRemaining <= 0) {
-            clearInterval(this.tickHandle); this.tickHandle=null; this.endAt=null;
-            this._onFinishSegment();
-          }
-        }, 1000);
+        this.tickHandle = setInterval(()=>{ if(this.remaining>0){ this.remaining -= 1; this.updateUI(); this.persistTimerState(); } if(this.remaining<=0){ clearInterval(this.tickHandle); this.tickHandle=null; this._onFinishSegment(); } }, 1000);
       },
       _onFinishSegment(){
-        this.endAt = null;
-        this.lastTick = null;
         if (this.state === 'work') {
             const s = getCurrentSubtopic();
             if (s) {
@@ -5471,7 +2999,6 @@
       },
       finishFlowSession(){
         if (this.mode !== 'C' || this.state !== 'work') return;
-        this._syncRemainingWithClock();
         if (this.tickHandle) { clearInterval(this.tickHandle); this.tickHandle = null; }
         const ratio = Math.max(1, parseInt((data.settings.flowtimeBreakRatio ?? 5), 10));
         const workSec = Math.max(0, this.remaining|0);
@@ -5493,8 +3020,6 @@
             }
           }
         } catch(_) {}
-        this.lastTick = null;
-        this.endAt = null;
         this.state = 'break';
         this.segmentTotal = restSec;
         this.remaining = restSec;
@@ -5528,59 +3053,27 @@
         this._startTick();
         this.updateUI();
       },
-      async start(){
-        this._syncRemainingWithClock();
-        if(!getCurrentSubtopic()){ toast('Hãy chọn một Chủ đề con trước khi bắt đầu'); return; }
-        ensureAudio();
-        if(this.mode==='C' && this.state==='idle'){
-          this.state='work'; this.remaining=0; this.segmentTotal=0; this.cycleIndex=0;
-          this._startTick(); this.updateUI();
-        } else if(this.state==='idle'){
-          this.cycleIndex = this.cycleIndex || 0; this.beginWork();
-        } else if(this.state==='paused'){
-          await this.resume();
-          return;
+      async start(){ if(!getCurrentSubtopic()){ toast('Hãy chọn một Chủ đề con trước khi bắt đầu'); return; } ensureAudio(); if(this.mode==='C' && this.state==='idle'){ this.state='work'; this.remaining=0; this.segmentTotal=0; this.cycleIndex=0; this._startTick(); this.updateUI(); } else if(this.state==='idle'){ this.cycleIndex = this.cycleIndex || 0; this.beginWork(); } else if(this.state==='paused'){ this.resume(); } await this.persistTimerState(true); },
+      async pause(){ if(this.tickHandle){ clearInterval(this.tickHandle); this.tickHandle=null; } this.prevState=this.state; this.state='paused'; this.updateUI(); await this.persistTimerState(true); },
+      async resume(){ if(this.state!=='paused'){ return; } this.state=this.prevState||'work'; this._startTick(); this.updateUI(); await this.persistTimerState(true); },
+      async skip(){
+        if(this.mode==='C' && this.state==='work'){ this.finishFlowSession(); await this.persistTimerState(true); return; }
+        if(this.state==='work'){
+          if(this.tickHandle){ clearInterval(this.tickHandle); this.tickHandle=null; }
+          this.remaining = 0;
+          this._onFinishSegment();
+        } else {
+          this.remaining=0; if(this.tickHandle){ clearInterval(this.tickHandle); this.tickHandle=null; } this._onFinishSegment();
         }
         await this.persistTimerState(true);
       },
-      async pause(){
-        this._syncRemainingWithClock();
-        if(this.tickHandle){ clearInterval(this.tickHandle); this.tickHandle=null; }
-        this.endAt = null;
-        this.lastTick = null;
-        this.prevState=this.state;
-        this.state='paused';
-        this.updateUI();
-        await this.persistTimerState(true);
-      },
-      async resume(){
-        if(this.state!=='paused'){ return; }
-        this._syncRemainingWithClock();
-        this.state=this.prevState||'work';
-        this._startTick();
-        this.updateUI();
-        await this.persistTimerState(true);
-      },
-      async skip(){
-        this._syncRemainingWithClock();
-        if(this.mode==='C' && this.state==='work'){ this.finishFlowSession(); await this.persistTimerState(true); return; }
-        if(this.tickHandle){ clearInterval(this.tickHandle); this.tickHandle=null; }
-        this.endAt = null;
-        this.lastTick = null;
-        this.remaining = 0;
-        this._onFinishSegment();
-        await this.persistTimerState(true);
-      },
       async reset(){
-        this._syncRemainingWithClock();
         if (this.tickHandle) { clearInterval(this.tickHandle); this.tickHandle = null; }
         this.state = 'idle';
         this.prevState = null;
         this.remaining = 0;
         this.segmentTotal = 0;
         this.cycleIndex = 0;
-        this.endAt = null;
-        this.lastTick = null;
         // Xóa gợi ý khi đặt lại
         const suggestionEl = $('#breakSuggestionDisplay');
         if (suggestionEl) { suggestionEl.textContent = ''; }
@@ -5903,9 +3396,7 @@ function exportSummary(sum) {
               if (customContainer) customContainer.classList.toggle('hidden', !customToggle.checked);
           }
           // THAY ĐỔI: Cập nhật giá trị dropdown
-            $('#set_theme_color').value = s.theme || 'default';
-            const ambianceToggle = $('#set_ambianceMode');
-            if (ambianceToggle) ambianceToggle.checked = (s.appMode === 'ambiance');
+          $('#set_theme_color').value = s.theme || 'default';
           const activeUrl = getActiveYoutubeUrl();
           $('#set_youtubeUrl').value = activeUrl || '';
           const initialVideoId = extractYouTubeID(activeUrl);
@@ -5981,7 +3472,6 @@ function exportSummary(sum) {
           s.soundTheme = $('#set_theme').value==='chime' ? 'chime':'beep';
           // THAY ĐỔI: Lưu giá trị theme
           s.theme = $('#set_theme_color').value;
-          if ($('#set_ambianceMode')) { s.appMode = $('#set_ambianceMode').checked ? 'ambiance' : 'power'; }
           s.language = ($('#set_language') && $('#set_language').value) || s.language;
           s.panelOpacity = parseFloat($('#set_panelOpacity').value) || 0.85;
           if ($('#set_backgroundMode')) { s.backgroundMode = $('#set_backgroundMode').value; }
@@ -6025,9 +3515,10 @@ function exportSummary(sum) {
           updatePresetButtonsText();
           timer.setPreset(s.preset, {silent:true});
 
-          // Không can thiệp trạng thái đang phát: tránh cue/pause lỗi khi nhấn Lưu
-          toast('Đã lưu cài đặt. Đang tải lại giao diện...');
-          setTimeout(() => { window.location.reload(); }, 1000);
+          // Không can thiệp trạng thái đang phát: tránh cue/pause lại khi nhấn Lưu
+
+          closeSettings();
+          toast('Đã lưu cài đặt');
       }
     function clampInt(v,min,max){ v=parseInt(v||0,10); if(isNaN(v)) v=min; return Math.max(min, Math.min(max, v)); }
     function clampFloat(v,min,max,def){ v=parseFloat(v); if(Number.isNaN(v)) v=def; return Math.max(min, Math.min(max, v)); }
@@ -6065,137 +3556,48 @@ function exportSummary(sum) {
             req.onerror = () => resolve('');
         }));
     }
-        function updateAmbianceVisual(payload) {
-      const videoEl = document.getElementById("ambianceBgVideo");
-      const imageEl = document.getElementById("ambianceBgImage");
-      if (!videoEl && !imageEl) return;
-      const fallbackGradient = 'linear-gradient(135deg, rgba(14,20,40,0.92), rgba(33,45,73,0.8))';
-      if (!payload) {
-        if (videoEl) {
-          if (videoEl.dataset.src && typeof videoEl.pause === 'function') {
-            videoEl.pause();
-          }
-          delete videoEl.dataset.src;
-          videoEl.removeAttribute('src');
-          if (typeof videoEl.load === 'function') {
-            try { videoEl.load(); } catch(_) {}
-          }
-          videoEl.classList.remove('is-active');
-        }
-        if (imageEl) {
-          imageEl.style.backgroundImage = '';
-        }
-        document.documentElement.style.removeProperty('--ambiance-bg-image');
-        return;
-      }
-      if (payload.type === 'video') {
-        const previewValue = payload.preview
-          ? (payload.preview.startsWith('linear-gradient') ? payload.preview : `url(${payload.preview})`)
-          : fallbackGradient;
-        if (imageEl) {
-          imageEl.style.backgroundImage = previewValue;
-        }
-        if (videoEl) {
-          if (videoEl.dataset.src !== payload.value) {
-            videoEl.dataset.src = payload.value;
-            videoEl.src = payload.value;
-            if (typeof videoEl.load === 'function') {
-              try { videoEl.load(); } catch(_) {}
-            }
-          }
-          if (typeof videoEl.play === 'function') {
-            const playPromise = videoEl.play();
-            if (playPromise && typeof playPromise.then === 'function') {
-              playPromise.catch(() => {});
-            }
-          }
-          videoEl.classList.add('is-active');
-        }
-        document.documentElement.style.setProperty('--ambiance-bg-image', previewValue);
-        return;
-      }
-      if (videoEl) {
-        if (videoEl.dataset.src && typeof videoEl.pause === 'function') {
-          videoEl.pause();
-        }
-        delete videoEl.dataset.src;
-        videoEl.removeAttribute('src');
-        if (typeof videoEl.load === 'function') {
-          try { videoEl.load(); } catch(_) {}
-        }
-        videoEl.classList.remove('is-active');
-      }
-      if (payload.type === 'image') {
-        const imageValue = payload.value.startsWith('url(') ? payload.value : `url(${payload.value})`;
-        if (imageEl) imageEl.style.backgroundImage = imageValue;
-        document.documentElement.style.setProperty('--ambiance-bg-image', imageValue);
-      } else if (payload.type === 'gradient') {
-        if (imageEl) imageEl.style.backgroundImage = payload.value;
-        document.documentElement.style.setProperty('--ambiance-bg-image', payload.value);
-      } else {
-        if (imageEl) imageEl.style.backgroundImage = fallbackGradient;
-        document.documentElement.style.setProperty('--ambiance-bg-image', fallbackGradient);
-      }
-    }
-
-
-        function applyCustomBg() {
+    function applyCustomBg() {
         const s = data.settings;
         const ref = s.customBg;
-        const bgMode = s.backgroundMode || 'cover';
-        document.body.style.backgroundSize = bgMode;
-        document.body.style.backgroundRepeat = (bgMode === 'auto') ? 'repeat' : 'no-repeat';
-        const clearInlineBgFallback = () => { try { document.body.style.backgroundImage = ''; } catch(_) {} };
         const theme = s.theme;
         const themeHasBg = ['lofi', 'space'].includes(theme);
         const isLightTheme = (theme === 'light' || theme === 'pastel');
-        if (ref && ref.startsWith('video:')) {
-          const src = ref.slice(6);
-          document.body.style.setProperty('--bg-image', 'none');
-          clearInlineBgFallback();
-          const selected = getSelectedAmbianceBackground();
-          const preview = selected && selected.type === 'video' ? (selected.preview || '') : '';
-          updateAmbianceVisual({ type: 'video', value: src, preview });
-          return;
-        }
-        if (ref && ref.startsWith('gradient:')) {
-          const gradient = ref.replace('gradient:', '');
-          document.body.style.setProperty('--bg-image', gradient);
-          clearInlineBgFallback();
-          updateAmbianceVisual({ type: 'gradient', value: gradient });
-          return;
-        }
+
+        // Áp dụng chế độ hiển thị nền
+        const bgMode = s.backgroundMode || 'cover';
+        document.body.style.backgroundSize = bgMode;
+        document.body.style.backgroundRepeat = (bgMode === 'auto') ? 'repeat' : 'no-repeat';
+
+        const clearInlineBgFallback = () => { try { document.body.style.backgroundImage = ''; } catch(_) {} };
+
         if (ref) {
-          const urlPromise = (ref.startsWith('data:') || ref.startsWith('http') || ref.startsWith('blob:'))
-            ? Promise.resolve(ref)
-            : getStoredFileUrl(ref);
-          urlPromise.then(url => {
-            if (url) {
-              document.body.style.setProperty('--bg-image', `url(${url})`);
-              updateAmbianceVisual({ type: 'image', value: url });
-            } else {
-              document.body.style.setProperty('--bg-image', isLightTheme ? 'none' : '');
-              updateAmbianceVisual(null);
-            }
-            clearInlineBgFallback();
-          });
+            const urlPromise = (ref.startsWith('data:') || ref.startsWith('http') || ref.startsWith('blob:'))
+                ? Promise.resolve(ref)
+                : getStoredFileUrl(ref);
+            
+            urlPromise.then(url => {
+                if (url) {
+                    document.body.style.setProperty('--bg-image', `url(${url})`);
+                } else {
+                    document.body.style.setProperty('--bg-image', isLightTheme ? 'none' : '');
+                }
+                clearInlineBgFallback();
+            });
         } else if (!themeHasBg) {
-          if (isLightTheme) {
-            document.body.style.setProperty('--bg-image', 'none');
-            updateAmbianceVisual(null);
-          } else {
-            const fallback = 'radial-gradient(1200px 800px at 10% -10%, #20285b 0%, #0f1222 50%, #0b0e1a 100%)';
-            document.body.style.setProperty('--bg-image', fallback);
-            updateAmbianceVisual({ type: 'gradient', value: fallback });
-          }
-          clearInlineBgFallback();
+            if (isLightTheme) {
+                // Light/pastel: không dùng nền tối
+                document.body.style.setProperty('--bg-image', 'none');
+                clearInlineBgFallback();
+            } else {
+                // Dark/default fallback
+                document.body.style.setProperty('--bg-image', 'radial-gradient(1200px 800px at 10% -10%, #20285b 0%, #0f1222 50%, #0b0e1a 100%)');
+            }
         } else {
-          document.body.style.removeProperty('--bg-image');
-          clearInlineBgFallback();
-          updateAmbianceVisual(null);
+            // Let the CSS for the theme handle the background
+            document.body.style.removeProperty('--bg-image');
+            clearInlineBgFallback();
         }
     }
-
     function applyPanelOpacity() { document.documentElement.style.setProperty('--panel-opacity', data.settings.panelOpacity); }
       function renderDashboard(){
           const stats = data.topics.flatMap(t => t.subtopics.map(s => ({ topic: t.name, subtopic: s.name, m: s.stats.totalMinutes || 0, c: s.stats.sessionsCompleted || 0, t: s.stats.tasksCompleted || 0 })));
@@ -6741,7 +4143,6 @@ function exportSummary(sum) {
               const container = $('#customSoundsContainer');
               if (container) container.classList.toggle('hidden', !enabled);
           });
-        on($("#btnPiP"), "click", () => pipManager.toggle());
       }
       on($('#btnSaveNote'), 'click', async ()=>{ const s=getCurrentSubtopic(); if(!s) return; const id=pendingNoteSessionId; const sess=s.sessions.find(x=>x.id===id); if(sess){ sess.note=$('#noteText').value.trim(); await saveData(); renderStatsHistory(); toast('Đã lưu ghi chú'); } closeNoteModal(); });
       on($('#btnSkipNote'), 'click', ()=> closeNoteModal());
@@ -7023,7 +4424,7 @@ function exportSummary(sum) {
         if (appContent) appContent.addEventListener('scroll', closeAllMenus);
       } catch(_) {}
       try { window.addEventListener('scroll', closeAllMenus, true); } catch(_) {}
-      window.addEventListener('beforeunload', () => { timer._syncRemainingWithClock(); timer.persistTimerState(true); });
+      window.addEventListener('beforeunload', () => timer.persistTimerState(true));
 
       // Accordion behavior for Methods section (always single-open)
       try {
@@ -7156,12 +4557,6 @@ function exportSummary(sum) {
         applyCustomBg();
         applyPanelOpacity();
         renderSubtopicTasks();
-        renderAmbianceTasks();
-        renderAmbianceTopics();
-        const ambianceBgModal = document.getElementById("ambiance-modal-backgrounds");
-        if (ambianceBgModal && !ambianceBgModal.classList.contains("hidden")) { renderAmbianceBackgrounds(ambianceState.backgroundCategory); }
-        const ambianceSoundModal = document.getElementById("ambiance-modal-sounds");
-        if (ambianceSoundModal && !ambianceSoundModal.classList.contains("hidden")) { renderAmbianceSounds(ambianceState.soundCategory); }
         updateFullscreenButton();
         switchView(data.settings.currentView);
         // fixVietnameseUI đã bị loại bỏ; nội dung hiển thị trực tiếp bằng UTF-8
@@ -7179,19 +4574,12 @@ function exportSummary(sum) {
     }
     function updateFullscreenButton() {
         const btn = $('#btnFullscreen');
-        const ambianceBtn = $('#ambianceBtnFullscreen');
-        const isFull = !!document.fullscreenElement;
-        const label = isFull ? 'Thoát toàn màn hình' : 'Toàn màn hình';
-        const icon = isFull ? '↙️' : '↗️';
-        if (btn) {
-            btn.textContent = icon;
-            btn.title = label;
-            btn.setAttribute('aria-label', label);
-        }
-        if (ambianceBtn) {
-            ambianceBtn.textContent = icon;
-            ambianceBtn.title = label;
-            ambianceBtn.setAttribute('aria-label', label);
+        if (document.fullscreenElement) {
+            btn.innerHTML = '↙️';
+            btn.title = 'Thoát toàn màn hình';
+        } else {
+            btn.innerHTML = '↗️';
+            btn.title = 'Toàn màn hình';
         }
     }
     async function initializeApp() {
@@ -7203,10 +4591,10 @@ function exportSummary(sum) {
           storageManager.getAll('subtopics')
         ]);
         let merged;
-        let firstLaunch = false;
         if (!settings) {
           const defaultData = JSON.parse(JSON.stringify(defaults));
           await storageManager.updateSettings(defaultData.settings);
+          // Seed any default topics/subtopics if provided
           for (const t of defaultData.topics) {
             const { subtopics: subs, ...topicData } = t;
             await storageManager.add('topics', topicData);
@@ -7215,7 +4603,6 @@ function exportSummary(sum) {
             }
           }
           merged = defaultData;
-          firstLaunch = true;
         } else {
           const map = {};
           for (const t of topics) map[t.id] = { ...t, subtopics: [] };
@@ -7224,23 +4611,16 @@ function exportSummary(sum) {
         }
         data = window.data = merged;
         normalizeDataStructure(data);
-        const mode = (data.settings && data.settings.appMode) ? data.settings.appMode : 'power';
-        syncModeWrappers(mode);
-        initAmbianceUI();
         await ensureValidSelection();
         await seedAchievedMilestones();
         renderAll();
-        setupModeSelectionModal(firstLaunch);
         try { tagI18nElements(); applyLanguage(data.settings?.language || localStorage.getItem('lang') || 'vi'); } catch(_) {}
         try { storageManager.autoBackup(data); } catch (e) { console.warn('AutoBackup error:', e); }
         bindEvents();
         applyTheme();
-        if (mode === 'ambiance') {
-          toggleAmbianceZen(false);
-        }
       } catch (err) {
         console.error('Initialization error:', err);
-        toast(`L??-i kh??Yi t???o: ${err.message}`);
+        toast(`Lỗi khởi tạo: ${err.message}`);
       }
     }
     // =========================================================
@@ -7418,167 +4798,5 @@ function exportSummary(sum) {
 
     loadLanguage(localStorage.getItem('lang') || 'vi').then(initializeApp);
     </script>
-    </div>
-
-        <div id="ambiance-mode-wrapper" class="hidden">
-        <div class="ambiance-background">
-            <video id="ambianceBgVideo" class="ambiance-bg-video" autoplay loop muted playsinline></video>
-            <div id="ambianceBgImage" class="ambiance-bg-image"></div>
-        </div>
-        <div class="ambiance-zen-overlay" id="ambianceZenOverlay">
-            <span class="hint">Di chuột để hiển thị lại giao diện</span>
-        </div>
-        <div class="ambiance-toolbar" role="toolbar" aria-label="Ambiance controls">
-            <button class="ambiance-icon" id="ambianceBtnTopics" title="Chủ đề">📚</button>
-            <button class="ambiance-icon" id="ambianceBtnTasks" title="Nhiệm vụ">📝</button>
-            <button class="ambiance-icon" id="ambianceBtnSounds" title="Sound Mixer">🎧</button>
-            <button class="ambiance-icon" id="ambianceBtnBackgrounds" title="H?nh n?n">🖼️</button>
-            <button class="ambiance-icon" id="ambianceBtnFullscreen" title="Toàn màn hình">↗️</button>
-            <button class="ambiance-icon" id="ambianceBtnZen" title="Ch? ?? Zen">👁️</button>
-            <button class="ambiance-icon" id="ambianceBtnSettings" title="C?i ??t">⚙️</button>
-        </div>
-        <div class="ambiance-root">
-            <div class="ambiance-main">
-                <div class="sr-only ambiance-status" id="ambiance-status" aria-live="polite">Sẵn sàng</div>
-                <div class="ambiance-clock" id="ambiance-clock">25:00</div>
-                <div class="sr-only ambiance-secondary" id="ambiance-cycle">Chu kỳ 0 / 0</div>
-                <div class="ambiance-controls">
-                    <button class="ambiance-btn primary" id="ambiance-start" type="button">Bắt đầu</button>
-                    <button class="ambiance-btn" id="ambiance-pause" type="button">Tạm dừng</button>
-                    <button class="ambiance-btn" id="ambiance-skip" type="button">Bỏ qua</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="ambiance-modal hidden" id="ambiance-modal-topics" data-ambiance-modal>
-            <div class="ambiance-modal-content">
-                <div class="ambiance-modal-header">
-                    <h3>Chủ đề &amp; Chủ đề con</h3>
-                    <button class="ambiance-close" data-ambiance-close type="button">&times;</button>
-                </div>
-                <div class="ambiance-modal-body">
-                    <div class="ambiance-section">
-                        <div class="ambiance-topic-flow" id="ambianceTopicsList"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="ambiance-modal hidden" id="ambiance-modal-tasks" data-ambiance-modal>
-            <div class="ambiance-modal-content">
-                <div class="ambiance-modal-header">
-                    <h3>Mục tiêu Phiên</h3>
-                    <button class="ambiance-close" data-ambiance-close type="button">&times;</button>
-                </div>
-                <div class="ambiance-modal-body">
-                    <div class="ambiance-section">
-                        <h4>Danh sách nhiệm vụ</h4>
-                        <div class="ambiance-task-stats" id="ambianceTaskStats">
-                            <span><strong>0</strong> Open</span>
-                            <span><strong>0</strong> Completed</span>
-                        </div>
-                        <div class="ambiance-list" id="ambianceTasksList"></div>
-                        <div class="ambiance-task-input" id="ambianceTaskInputWrap">
-                            <input type="text" id="ambianceNewTaskInput" placeholder="Thêm task mới..." autocomplete="off">
-                            <button class="ambiance-btn primary" id="ambianceAddTaskBtn" type="button">Thêm</button>
-                        </div>
-                        <p class="ambiance-secondary">Thêm hoặc chỉnh sửa chi tiết trong Power Mode nếu cần.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="ambiance-modal hidden" id="ambiance-modal-sounds" data-ambiance-modal>
-            <div class="ambiance-modal-content">
-                <div class="ambiance-modal-header">
-                    <h3>Sound Mixer</h3>
-                    <button class="ambiance-close" data-ambiance-close type="button">&times;</button>
-                </div>
-                <div class="ambiance-modal-body">
-                    <div class="ambiance-section">
-                        <h4>Danh mục âm thanh</h4>
-                        <div class="ambiance-chip-group" id="ambianceSoundCategories"></div>
-                        <div class="ambiance-upload">
-                            <label for="ambianceSoundUpload">📤 Tải lên Âm thanh
-                                <input type="file" id="ambianceSoundUpload" accept="audio/*" hidden>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="ambiance-section">
-                        <h4>Trộn âm</h4>
-                        <div class="ambiance-list" id="ambianceSoundList"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="ambiance-modal hidden" id="ambiance-modal-backgrounds" data-ambiance-modal>
-            <div class="ambiance-modal-content">
-                <div class="ambiance-modal-header">
-                    <h3>Background Gallery</h3>
-                    <button class="ambiance-close" data-ambiance-close type="button">&times;</button>
-                </div>
-                <div class="ambiance-modal-body">
-                    <div class="ambiance-section">
-                        <h4>Danh mục</h4>
-                        <div class="ambiance-chip-group" id="ambianceBgCategories"></div>
-                        <div class="ambiance-upload">
-                            <label for="ambianceBgUpload">📤 Tải lên
-                                <input type="file" id="ambianceBgUpload" accept="image/jpeg,image/png,image/gif" hidden>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="ambiance-section">
-                        <h4>Bộ sưu tập</h4>
-                        <div class="ambiance-bg-grid" id="ambianceBgList"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="ambiance-modal hidden" id="ambiance-modal-settings" data-ambiance-modal>
-            <div class="ambiance-modal-content">
-                <div class="ambiance-modal-header">
-                    <h3>Cài đặt nhanh</h3>
-                    <button class="ambiance-close" data-ambiance-close type="button">&times;</button>
-                </div>
-                <div class="ambiance-modal-body">
-                    <div class="ambiance-section">
-                        <h4>Chế độ giao diện</h4>
-                        <div class="ambiance-list">
-                            <div class="item">
-                                <span>Ambiance Mode</span>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="ambianceModeToggle">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ambiance-section">
-                        <h4>Picture-in-Picture</h4>
-                        <button class="ambiance-btn" id="ambianceTogglePiP" type="button">Bật PiP</button>
-                    </div>
-                    <div class="ambiance-section">
-                        <h4>Cài đặt đầy đủ</h4>
-                        <button class="ambiance-btn" id="ambianceOpenFullSettings" type="button">M? modal Cài đặt đầy đủ</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
